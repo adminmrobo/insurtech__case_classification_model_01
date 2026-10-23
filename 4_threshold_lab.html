@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<script>
+(function(){var KEY='it1_lang',AVAILABLE=['ko'],LANGS=['ko','en','zh','ja','uz','ru'];
+var cur=document.documentElement.lang||'ko';cur=cur.slice(0,2);
+function root(){var p=location.pathname;var dir=p.replace(/[^\/]*$/,'');if(cur!=='ko'){dir=dir.replace(/[^\/]+\/$/,'')}return dir}
+function file(){var f=location.pathname.split('/').pop();if(!f)f='index.html';if(!/\.html?$/.test(f))f+='.html';return f}
+function url(l){return root()+(l==='ko'?'':l+'/')+file()+location.search.replace(/[?&]lang=[^&]*/,'').replace(/^&/,'?')+location.hash}
+function exists(u,cb){if(location.protocol==='file:'){cb(true);return}try{fetch(u,{method:'HEAD'}).then(function(r){cb(!(r.status===404||r.status===410))},function(){cb(true)})}catch(e){cb(true)}}
+function save(l){try{localStorage.setItem(KEY,l)}catch(e){}}
+function drop(){try{localStorage.removeItem(KEY)}catch(e){}}
+window.itSetLang=function(l,manual){if(l===cur)return;
+ if(AVAILABLE.indexOf(l)<0){if(manual){var n=document.getElementById('lang-note');if(n){n.hidden=false;n.textContent='이 언어판은 아직 준비 중입니다 ('+l+'). 한국어판을 보여 드립니다.'}}else{drop()}return}
+ var u=url(l);exists(u,function(ok){if(ok){if(manual)save(l);location.href=u}else{drop();if(manual){var n=document.getElementById('lang-note');if(n){n.hidden=false;n.textContent='언어판 파일을 찾지 못했습니다: '+u}}}})};
+var q=(location.search.match(/[?&]lang=([a-z]{2})/)||[])[1];
+if(q&&LANGS.indexOf(q)>=0){save(q);if(q!==cur)itSetLang(q,true);return}
+var s=null;try{s=localStorage.getItem(KEY)}catch(e){}
+if(s&&s!==cur){itSetLang(s,false);return}
+if(!s){var b=(navigator.language||'ko').slice(0,2);if(b!==cur&&AVAILABLE.indexOf(b)>=0)itSetLang(b,false)}
+})();
+</script>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>4편 · 임계값과 비용 실험실 | 인슈어테크 #1</title>
+<meta name="description" content="AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델 4편. 몇 %의 고객을 심사할지, 놓친 청구 1건이 얼마나 비싼지를 다이얼로 바꾸며 최적점을 찾는다.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Silkscreen&display=swap">
+<style>
+
+.say .av:has(img){background:#fff}
+.say .av img{display:block}
+img.scene{display:block;width:100%;max-width:720px;height:auto;aspect-ratio:9/5;object-fit:cover;border-radius:var(--r)}
+img.keyvis{display:block;width:100%;height:auto;aspect-ratio:1100/320;object-fit:cover;border-radius:var(--r)}
+img.pic{display:block;width:100%;height:auto;aspect-ratio:480/440;object-fit:cover;border-radius:6px}
+.crew .cf{background:#fff}
+.crew .cf img{width:100%;height:100%;object-fit:contain}
+.crew .moods button img{width:36px;height:36px;border-radius:7px;display:block}
+/* 레이아웃: 보상 센터 연구 노트 — 상단 바 · 히어로(그림 자리) · 육각 번호 섹션 · 카드형 실습 */
+:root{
+  --bg:#f6f5fb; --surface:#ffffff; --sunken:#eeecf7; --ink:#1d1a2e; --muted:#5d5873; --line:#dcd8ea;
+  --accent:#5b47c9; --accent-ink:#ffffff; --accent-soft:#ece8ff;
+  --core:#6a4fd8; --data:#c2417a; --seq:#13857f;
+  --c-no:#2f86c9; --c-claim:#d9730d; --c-3:#7b61d9; --c-4:#1f9e78;
+  --risk:#b4471b; --risk-bg:#fdeee6; --safe:#1f7a5c; --safe-bg:#e5f4ee; --warn:#9a620e; --warn-bg:#fbf1df;
+  --grid:#e6e3f0;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --f-pixel:"Silkscreen","IBM Plex Mono",monospace;
+  --r:8px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12111a; --surface:#1b1a26; --sunken:#0e0d15; --ink:#ece9f7; --muted:#a29dba; --line:#2e2b40;
+  --accent:#a998ff; --accent-ink:#14121f; --accent-soft:#2a2547;
+  --core:#a48cf0; --data:#f07aaa; --seq:#4cc3b9;
+  --c-no:#3f8fd2; --c-claim:#d8742a; --c-3:#8a74e0; --c-4:#26a17c;
+  --risk:#f08a5d; --risk-bg:#3a1f16; --safe:#5fcf9f; --safe-bg:#14302a; --warn:#e3aa52; --warn-bg:#33270f;
+  --grid:#2a2738; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12111a; --surface:#1b1a26; --sunken:#0e0d15; --ink:#ece9f7; --muted:#a29dba; --line:#2e2b40;
+  --accent:#a998ff; --accent-ink:#14121f; --accent-soft:#2a2547;
+  --core:#a48cf0; --data:#f07aaa; --seq:#4cc3b9;
+  --c-no:#3f8fd2; --c-claim:#d8742a; --c-3:#8a74e0; --c-4:#26a17c;
+  --risk:#f08a5d; --risk-bg:#3a1f16; --safe:#5fcf9f; --safe-bg:#14302a; --warn:#e3aa52; --warn-bg:#33270f;
+  --grid:#2a2738; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.7;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--accent)}
+h1,h2,h3{line-height:1.3;text-wrap:balance;margin:0}
+p{margin:0}
+code,pre,.mono{font-family:var(--f-mono)}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1000px;margin:0 auto;padding-inline:20px}
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:6px 14px;flex-wrap:wrap;padding-block:8px}
+nav.top .brand{font-weight:700;text-decoration:none;color:var(--ink);white-space:nowrap}
+nav.top .brand b{font-family:var(--f-pixel);font-weight:400;color:var(--accent);margin-left:4px}
+nav.top .links{display:flex;gap:2px 12px;flex-wrap:wrap;font-size:.86rem;flex:1;min-width:0}
+nav.top .links a{color:var(--muted);text-decoration:none}
+nav.top .links a:hover{color:var(--ink)}
+nav.top select{width:auto;font:inherit;font-size:.82rem;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:3px 6px}
+header.hero{padding-block:28px 20px}
+.hero-grid{display:grid;gap:18px}
+.series{display:flex;flex-wrap:wrap;gap:6px}
+.series a{font-size:.78rem;text-decoration:none;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 10px;background:var(--surface)}
+.series a.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+.kicker{font-family:var(--f-pixel);font-size:.82rem;color:var(--accent);letter-spacing:.04em}
+h1{font-size:clamp(1.7rem,4.2vw,2.5rem);font-weight:700;letter-spacing:-.015em}
+.lead{font-size:1.06rem;color:var(--muted);max-width:68ch}
+.byline{font-size:.84rem;color:var(--muted)}
+.guide{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.82rem;color:var(--muted)}
+.guide span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.chat{display:grid;gap:10px;max-width:760px}
+.say{display:flex;gap:12px;align-items:flex-start}
+.say .av{flex:0 0 52px;height:52px;border-radius:12px;display:grid;place-items:center;font-weight:700;font-size:1.05rem;color:var(--accent-ink);background:var(--avc,var(--accent));position:relative;overflow:hidden}
+.say .av img{width:100%;height:100%;object-fit:cover;object-position:50% 18%}
+.say .av small{position:absolute;bottom:2px;left:0;right:0;font-size:.55rem;font-weight:500;text-align:center;opacity:.85}
+.say .sbub{background:var(--surface);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:8px 14px;min-width:0}
+.say .sbub b{font-size:.8rem;color:var(--muted);display:block}
+.say .sbub ul{margin:4px 0 0;padding-left:1.2em}
+.npc{display:inline-block;margin-left:6px;font-family:var(--f-pixel);font-size:.62rem;font-weight:400;letter-spacing:.06em;color:#3a2a00;background:#f2c94c;border:1px solid #b8901a;border-radius:3px;padding:0 5px;vertical-align:1px}
+.bomi{--avc:#d9730d}.actuary{--avc:#5b47c9}.fly{--avc:#13857f}.robo{--avc:#2f86c9}
+section.part{padding-block:34px 10px;border-top:1px solid var(--line);margin-top:26px}
+.part-head{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;align-items:center;margin-bottom:16px}
+.hex{width:44px;height:50px;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);background:var(--kc,var(--accent));color:#fff;display:grid;place-items:center;font-family:var(--f-pixel);font-size:1.05rem;grid-row:span 2}
+.part-head h2{font-size:1.4rem}
+.part-head h2 span.en{font-family:var(--f-pixel);font-weight:400;font-size:.72rem;color:var(--muted);margin-left:8px;letter-spacing:.03em}
+.part-head p{color:var(--muted);font-size:.94rem}
+.body{display:grid;gap:16px;grid-template-columns:minmax(0,1fr)}
+.body>p,.body>ul,.body>ol{max-width:72ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;display:grid;gap:12px;min-width:0}
+.card h3{font-size:1.02rem}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:14px}
+.tblwrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:6px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.76rem;color:var(--muted);font-weight:600;letter-spacing:.02em;white-space:nowrap}
+td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr.hl td{background:var(--accent-soft);font-weight:600}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+button{font:inherit}
+.btn{text-decoration:none;display:inline-block;font-size:.9rem;font-weight:600;border-radius:8px;padding:7px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn:hover{border-color:var(--accent)}
+.btn[aria-pressed="true"],.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.small{font-size:.8rem;padding:3px 10px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.dial{display:grid;gap:4px;min-width:0;align-content:start}
+.dial label{font-size:.86rem;font-weight:500;display:flex;justify-content:space-between;gap:8px}
+.dial label output{font-family:var(--f-mono);color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+select,input[type=text],input[type=number]{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 8px;width:100%;min-width:0}
+.canvas-box{position:relative;min-width:0}
+.canvas-box canvas{width:100%;display:block;border:1px solid var(--line);border-radius:6px;background:var(--surface)}
+.cap{font-size:.86rem;color:var(--muted)}
+.cap b{color:var(--ink)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:.76rem;padding:4px 8px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-120%);z-index:5}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));gap:8px}
+.stat>div{background:var(--sunken);border-radius:6px;padding:8px 12px;display:grid}
+.stat .l{font-size:.74rem;color:var(--muted)}
+.stat .v{font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:6.5em 1fr 4.2em;gap:8px;align-items:center;font-size:.84rem}
+.bar .track{position:relative;height:16px;background:var(--sunken);border-radius:4px}
+.bar .fill{position:absolute;left:0;top:0;bottom:0;border-radius:0 4px 4px 0;background:var(--c,var(--accent));transition:width .25s}
+.bar .base{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.bar .v{font-family:var(--f-mono);text-align:right}
+@media (prefers-reduced-motion:reduce){.bar .fill{transition:none}}
+.cm{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px;max-width:440px;font-variant-numeric:tabular-nums}
+.cm .h{font-size:.76rem;color:var(--muted);font-weight:600;display:flex;align-items:end;padding:2px 4px}
+.cm .rh{align-items:center}
+.cm .c{border:1px solid var(--line);border-radius:6px;padding:8px 10px;display:grid;background:var(--surface)}
+.cm .c b{font-size:1.15rem}
+.cm .c span{font-size:.74rem;color:var(--muted)}
+.cm .c.ok{background:var(--safe-bg);border-color:transparent}
+.cm .c.bad{background:var(--risk-bg);border:2px solid var(--risk)}
+.cm .c.bad span{color:var(--risk);font-weight:600}
+.pill{display:inline-block;font-size:.74rem;font-weight:600;padding:1px 8px;border-radius:999px;white-space:nowrap}
+.pill.risk{background:var(--risk-bg);color:var(--risk)}.pill.safe{background:var(--safe-bg);color:var(--safe)}.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.pass{background:var(--safe-bg);color:var(--safe)}.pill.fail{background:var(--risk-bg);color:var(--risk)}
+.note{border-left:3px solid var(--warn);background:var(--warn-bg);padding:8px 14px;border-radius:0 6px 6px 0;font-size:.9rem}
+.note.info{border-color:var(--accent);background:var(--accent-soft)}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 18px;display:grid;gap:10px}
+.q .qt{font-weight:600}
+.q .opts{display:grid;gap:6px}
+.q .opts button{text-align:left;font-size:.92rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;cursor:pointer}
+.q .opts button.right{border-color:var(--safe);background:var(--safe-bg)}
+.q .opts button.wrong{border-color:var(--risk);background:var(--risk-bg)}
+.q .fb{font-size:.9rem}
+.codebox{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.codebox .tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--line);background:var(--sunken);padding:6px 6px 0}
+.codebox .tabs button{border:0;background:none;padding:6px 12px;border-radius:6px 6px 0 0;cursor:pointer;color:var(--muted);font-size:.84rem;font-family:var(--f-mono)}
+.codebox .tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);font-weight:500}
+.codebox .tools{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border-bottom:1px solid var(--line);align-items:center}
+.codebox .tools span{font-size:.78rem;color:var(--muted);flex:1;min-width:12em}
+.codebox pre{margin:0;padding:14px 16px;overflow:auto;max-height:440px;font-size:.8rem;line-height:1.55;white-space:pre}
+details.run{border:1px solid var(--line);border-radius:var(--r);background:var(--sunken)}
+details.run summary{cursor:pointer;padding:8px 14px;font-size:.88rem;font-weight:500}
+details.run pre{margin:0;padding:10px 16px 14px;overflow:auto;font-size:.78rem;line-height:1.5}
+.gloss{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:10px}
+.gloss div{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px}
+.gloss dt{font-weight:600}.gloss dd{margin:2px 0 0;font-size:.88rem;color:var(--muted)}
+.gloss dd i{font-style:normal;color:var(--ink)}
+.prompt pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--sunken);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;font-size:.8rem;max-height:360px;overflow:auto;margin:0}
+.teach-link{display:inline-block;font-weight:600;text-decoration:none;border:1px solid var(--accent);border-radius:8px;padding:8px 14px}
+section.outro{margin-top:40px;padding-block:30px;border-top:1px solid var(--line)}
+.outro .scene{width:100%;max-width:720px;aspect-ratio:720/400;border-radius:var(--r)}
+.placeholder{display:grid;place-items:center;text-align:center;background:repeating-linear-gradient(135deg,var(--sunken) 0 12px,var(--surface) 12px 24px);border:1px dashed var(--line);color:var(--muted);font-size:.82rem;padding:10px}
+.nav-eps{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between}
+footer{border-top:1px solid var(--line);margin-top:30px;padding-block:22px 40px;font-size:.82rem;color:var(--muted)}
+footer .wrap{display:grid;gap:8px}
+.robo-w{align-items:center}
+.robo-w .av{flex-basis:64px;height:64px;font-size:1.4rem}
+.robo-w[data-st="wrong"] .av{--avc:var(--risk)}
+.robo-w[data-st="success"] .av{--avc:var(--safe)}
+.robo-w[data-st="confused"] .av{--avc:var(--warn)}
+.player{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.player input[type=range]{flex:1;min-width:140px}
+.stamp{justify-self:start;border:3px double currentColor;border-radius:4px;padding:6px 16px;font-weight:700;font-size:1.35rem;letter-spacing:.04em;transform:rotate(-2deg)}
+.stamp.risk{color:var(--risk)}.stamp.safe{color:var(--safe)}.stamp.reject{color:var(--warn)}
+@media (max-width:560px){body{font-size:15px}.part-head h2{font-size:1.2rem}.say .av{flex-basis:44px;height:44px}}
+</style>
+</head>
+<body>
+<nav class="top"><div class="wrap"><a class="brand" href="index.html">인슈어테크 #1<b>· 4</b></a><div class="links"><a href="#make">모델 고르기</a><a href="#dials">다이얼</a><a href="#judge">판정하기</a><a href="#help">도움말·과제</a><a href="#formal">정식 방법</a><a href="#check">확인 문제</a><a href="#practice">코드</a><a href="#prompt">프롬프트</a><a href="#glossary">용어</a><a href="answers.html#a4">교육자용 정답</a></div><select id="lang-sel" aria-label="언어 선택" onchange="itSetLang(this.value,true)"><option value="ko" selected>한국어</option><option value="en">English</option><option value="zh">中文</option><option value="ja">日本語</option><option value="uz">O'zbekcha</option><option value="ru">Русский</option></select></div></nav><header class="hero"><div class="wrap hero-grid"><div class="series" aria-label="시리즈 편 목록"><a href="1_claim_question.html" class="">1 정확도의 함정</a><a href="2_data_cleaning.html" class="">2 결측값·이상치</a><a href="3_five_models.html" class="">3 모델 다섯</a><a href="4_threshold_lab.html" class="on" aria-current="page">4 임계값 실험실</a><a href="5_surrogate_tree.html" class="">5 대리모델</a><a href="6_judge_app.html" class="">6 판정 앱</a></div><p class="kicker">EPISODE 4 · 실험실형 · Threshold &amp; cost lab</p>
+<h1>임계값과 비용 실험실</h1><p class="lead">모델은 고객마다 “청구 위험 점수”를 냅니다. 그 점수로 <b>위에서부터 몇 %를 심사할지</b>는 사람이 정합니다. 이 실험실에서는 심사 비율과 비용 단가를 다이얼로 돌리며, 놓친 청구와 심사 일손 사이의 최적점을 직접 찾습니다.</p><div class="chat"><div class="say bomi"><div class="av" data-face="curious" aria-hidden="true"><img src="assets/av_bomi_curious.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>조교</b><p>박사님, 임계값 0.5는 누가 정했어요? 0.4로 바꾸면 청구 고객을 더 찾지 않나요?</p></div></div><div class="say actuary"><div class="av" data-face="explain" aria-hidden="true"><img src="assets/av_actuary_explain.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>박사<span class="npc" title="NPC">NPC</span></b><p>더 찾습니다. 대신 더 많이 심사해야 하죠. 놓친 청구 1건과 심사 1건 중 무엇이 비싼지에 따라 답이 달라집니다.</p></div></div><div class="say robo"><div class="av" data-face="success" aria-hidden="true"><img src="assets/av_robo_success.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>머니로보</b><p>삐빅! “비싸다” 감지. 머니로보 램프 점등. 여기서부터는 제 전문입니다.</p></div></div></div><p class="byline">글 · 안상선 ((주)M-Robo 대표) · AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델</p><div class="guide"><span style="--c:var(--c-claim)">찾은 청구 / 재현율</span><span style="--c:var(--c-3)">정밀도</span><span style="--c:var(--c-4)">심사 비율</span><span style="--c:var(--ink)">기준선</span></div></div></header><section class="part" id="make"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">1</div><h2>모델 고르기<span class="en">Pick a model</span></h2><p>점수 순서가 좋은 모델일수록 같은 심사 비율에서 더 많이 찾습니다.</p></div><div class="body"><p>3편의 58개 특성 모델 다섯 개가 시험 고객 12,666명에게 매긴 점수를 그대로 가져왔습니다. 모델을 고르세요.</p>
+<div class="btns" role="group" aria-label="모델 고르기"><button class="btn" data-model="lr" aria-pressed="true">로지스틱</button><button class="btn" data-model="svc" aria-pressed="false">SVC (RBF)</button><button class="btn" data-model="lsvm" aria-pressed="false">선형 SVM</button><button class="btn" data-model="dt" aria-pressed="false">의사결정나무</button><button class="btn" data-model="knn" aria-pressed="false">KNN</button></div>
+<p class="cap" id="model-cap"></p></div></div></section><section class="part" id="dials"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">2</div><h2>다이얼 돌리기<span class="en">Dials</span></h2><p>한 번에 다이얼 하나만 바꾸세요. 기록표가 몇 개를 바꿨는지 세어 줍니다.</p></div><div class="body"><div class="cols"><div class="dial"><label for="d-q">심사 비율 (점수 상위 몇 %를 심사) <output id="d-qv"></output></label><input type="range" id="d-q" min="0" max="120" step="1" value="60"><span class="cap" id="d-qnote"></span></div>
+<div class="dial"><label for="d-cm">놓친 청구 1건 비용 (가상 단가) <output id="d-cmv"></output></label><input type="range" id="d-cm" min="1" max="200" step="1" value="50"></div>
+<div class="dial"><label for="d-cr">심사 1건 비용 (가상 단가) <output id="d-crv"></output></label><input type="range" id="d-cr" min="1" max="10" step="1" value="1"></div></div>
+<div class="btns"><button class="btn small" id="go-default">이 모델의 기본 임계값 위치로</button><button class="btn small" id="go-tuned">로지스틱 목표 재현율 80% 위치로 (29.8%)</button><button class="btn small" id="go-best">지금 비용에서 최소 비용 위치로</button></div>
+<p class="note">비용은 실제 금액이 아니라 <b>상대 단가</b>입니다. 이 데이터에는 청구 금액이 없으므로 “놓친 청구 1건이 심사 1건보다 몇 배 비싼가”만 정합니다.</p></div></div></section><section class="part" id="judge"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">3</div><h2>판정하기<span class="en">Results &amp; record</span></h2><p>숫자는 모두 시험 데이터 12,666명(청구 185명)에서 센 값입니다.</p></div><div class="body"><div class="cols"><div class="card"><h3>혼동행렬</h3><div class="cm" id="cm4"></div></div>
+<div class="card"><h3>점수 (세로선 = 기준선)</h3><div class="bars">
+<div class="bar" id="l-rec" style="--c:var(--c-claim)"><span>재현율</span><div class="track"><div class="fill"></div><div class="base"></div></div><span class="v"></span></div>
+<div class="bar" id="l-prec" style="--c:var(--c-3)"><span>정밀도</span><div class="track"><div class="fill"></div><div class="base"></div></div><span class="v"></span></div>
+<div class="bar" id="l-flag" style="--c:var(--c-4)"><span>심사 비율</span><div class="track"><div class="fill"></div><div class="base"></div></div><span class="v"></span></div></div>
+<div class="stat"><div><span class="l">총비용 (이 설정)</span><span class="v" id="c-now"></span></div><div><span class="l">기준선 (아무도 심사 안 함)</span><span class="v" id="c-base"></span></div><div><span class="l">모두 심사</span><span class="v" id="c-all"></span></div></div></div></div>
+<div class="card"><h3>심사 비율에 따른 총비용 (지금 모델 · 지금 단가)</h3><div class="canvas-box"><canvas id="cost-cv" aria-label="심사 비율에 따른 총비용 곡선"></canvas><div class="tip" id="cost-tip" hidden></div></div><p class="cap" id="cost-cap" aria-live="polite"></p></div>
+<div class="cols"><div class="say bomi" id="bomi-react"><div class="av" aria-hidden="true"><img id="bomi-img" src="assets/av_bomi_curious.webp" alt="" width="160" height="160"><small id="bomi-face" hidden>궁금</small></div><div class="sbub"><b>조교</b><p id="bomi-line"></p></div></div><div class="say robo robo-w" id="robo-4" data-st="idle" aria-live="polite"><div class="av" data-rs="idle" aria-hidden="true"><img src="assets/av_robo_idle.webp" alt="" width="160" height="160" loading="lazy"></div><div class="av" data-rs="thinking" hidden aria-hidden="true"><img src="assets/av_robo_thinking.webp" alt="" width="160" height="160" loading="lazy"></div><div class="av" data-rs="wrong" hidden aria-hidden="true"><img src="assets/av_robo_wrong.webp" alt="" width="160" height="160" loading="lazy"></div><div class="av" data-rs="confused" hidden aria-hidden="true"><img src="assets/av_robo_confused.webp" alt="" width="160" height="160" loading="lazy"></div><div class="av" data-rs="success" hidden aria-hidden="true"><img src="assets/av_robo_success.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>머니로보</b><p data-rs="idle">대기 중이에요. 다이얼을 돌려 주세요. 비용 다이얼이면 더 좋고요.</p><p data-rs="thinking" hidden>삐빅, 계산 중…</p><p data-rs="wrong" hidden>놓친 청구가 너무 많아 기준선보다 비싸요!</p><p data-rs="confused" hidden>심사가 너무 많아요. 거의 다 보는 건 판정이 아니에요.</p><p data-rs="success" hidden>삐빅! 기준선보다 총비용이 크게 줄었어요.</p></div></div></div>
+<div class="btns"><button class="btn primary" id="rec-add">이 설정 기록하기</button><button class="btn small" id="rec-clear">기록 지우기</button></div>
+<div class="tblwrap"><table><thead><tr><th class="r">#</th><th>모델</th><th class="r">심사 비율</th><th class="r">놓친 비용</th><th class="r">심사 비용</th><th class="r">재현율</th><th class="r">정밀도</th><th class="r">총비용</th><th class="r">기준선 대비</th><th>바꾼 다이얼 수</th></tr></thead><tbody id="rec-body"></tbody></table></div></div></div></section><section class="part" id="help"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">4</div><h2>도움말 · 실험 과제<span class="en">Tasks</span></h2><p>기본 과제 2개, 도전 과제 2개.</p></div><div class="body"><ul><li><b>기본 과제 1</b> · 로지스틱으로, 단가는 50 : 1 그대로 두고 심사 비율만 10% → 20% → 30%로 바꿔 기록하세요. 재현율과 정밀도가 어떻게 움직이나요?</li><li><b>기본 과제 2</b> · 로지스틱, 심사 비율 29.8%(목표 재현율 80% 위치)에서 놓친 청구 비용만 20 → 50 → 100으로 바꿔 기록하세요. 이 위치가 기준선보다 싼 것은 언제인가요?</li><li><b>도전 과제 1</b> · 단가 50 : 1에서 다섯 모델 각각의 “최소 비용 위치” 버튼을 눌러 기록하세요. 가장 싼 모델은? 그 모델의 재현율은 80%보다 높나요, 낮나요?</li><li><b>도전 과제 2</b> · 직접 규칙 만들기: 놓친 청구 비용을 얼마로 정하면 로지스틱의 최소 비용 위치가 29.8% 근처로 오나요? 그 단가가 현실적인지 이야기해 보세요.</li></ul><p class="cap">도움말: 심사 비율을 올리면 재현율은 오르고(놓친 청구 ↓) 정밀도는 대체로 내려갑니다(오탐 ↑). 총비용 곡선의 가장 낮은 점이 지금 단가에서의 최적점입니다. 예시 답과 채점 포인트는 <a href="answers.html#a4">교육자용 정답 4편</a>에 있습니다.</p><div class="chat"><div class="say fly"><div class="av" data-face="idea" aria-hidden="true"><img src="assets/av_fly_idea.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>초파리 연구원</b><p>놓친 청구가 100배 비싸면 거의 다 심사해야 하나요? 그럼 모델이 왜 필요해요? 저 지금 진지해요.</p></div></div></div></div></div></section><section class="part" id="formal"><div class="wrap"><div class="part-head" style="--kc:var(--core)"><div class="hex">5</div><h2>정식 방법: 임계값은 학습 데이터로 고른다<span class="en">Choosing the threshold properly</span></h2><p>시험 데이터는 마지막 한 번만.</p></div><div class="body"><p>실험실은 이해를 돕기 위해 <b>시험 데이터</b>로 다이얼을 돌렸습니다. 하지만 실제로 임계값을 고를 때 시험 데이터를 쓰면, 시험 점수가 “미리 본 시험”이 되어 부풀려집니다. 정식 방법은 이렇습니다.</p>
+<ol><li>학습 데이터 5-Fold 교차검증으로 각 고객의 확률을 구한다 (그 고객을 학습에 쓰지 않은 모델의 확률)</li><li>그 확률로 목표 재현율 80%를 만족하는 가장 높은 임계값을 고른다 → <b>0.4049</b></li><li>그 임계값을 시험 데이터에 한 번만 적용한다 → 185명 중 <b>151명</b> 탐지(재현율 81.6%), 심사 비율 29.8%</li></ol>
+<div class="tblwrap"><table><thead><tr><th>임계값</th><th class="r">찾은 청구</th><th class="r">놓친 청구</th><th class="r">추가 심사</th><th class="r">재현율</th><th class="r">정밀도</th><th class="r">심사 비율</th><th class="r">총비용 (50 : 1)</th></tr></thead><tbody>
+<tr><td>기준선 (아무도 심사 안 함)</td><td class="r">0</td><td class="r">185</td><td class="r">0</td><td class="r">0.000</td><td class="r">—</td><td class="r">0.0%</td><td class="r">9,250</td></tr>
+<tr><td>기본 0.5</td><td class="r">135</td><td class="r">50</td><td class="r">2,519</td><td class="r">0.730</td><td class="r">0.051</td><td class="r">21.0%</td><td class="r">5,154</td></tr>
+<tr class="hl"><td>목표 재현율 80% → 0.405</td><td class="r">151</td><td class="r">34</td><td class="r">3,620</td><td class="r">0.816</td><td class="r">0.040</td><td class="r">29.8%</td><td class="r">5,471</td></tr></tbody></table></div>
+<p>목표 재현율 80%는 “청구 고객을 놓치지 않겠다”는 <b>정책</b>입니다. 단가 50 : 1에서는 비용만 보면 기본 0.5가 더 싸고, 실험실의 최소 비용 위치(심사 약 13%)는 더 쌉니다. 무엇을 우선할지는 숫자가 아니라 보상 센터가 정합니다. 5편부터는 이 정책(재현율 80%)으로 정한 판정을 그대로 씁니다.</p></div></div></section><section class="part" id="check"><div class="wrap"><div class="part-head" style="--kc:var(--core)"><div class="hex">6</div><h2>확인 문제<span class="en">Check</span></h2><p>정답을 고르면 해설이 나옵니다.</p></div><div class="body"><div class="q" id="q4-1" data-ok="1" data-ex="로지스틱에서 심사 10% → 30%로 올리면 찾은 청구가 104명 → 152명이 되지만, 걸러 낸 고객 중 청구 비율은 낮아집니다."><p class="qt">Q1. 심사 비율을 올리면(임계값을 낮추면) 보통 어떻게 되나요?</p><div class="opts"><button data-i="0" data-why="더 많이 걸러 내면 진짜 청구도 더 걸리지만, 미청구 고객도 더 많이 섞입니다.">재현율도 정밀도도 오른다</button><button data-i="1">재현율은 오르고, 정밀도는 대체로 내려간다</button><button data-i="2" data-why="혼동행렬의 네 칸이 모두 바뀝니다.">아무것도 바뀌지 않는다</button></div><p class="fb" aria-live="polite"></p></div><div class="q" id="q4-2" data-ok="1" data-ex="그래서 정식 방법은 학습 데이터의 5-Fold 교차검증 확률로 임계값 0.4049를 고르고, 시험 데이터에는 마지막에 한 번만 적용합니다."><p class="qt">Q2. 임계값을 시험 데이터에서 가장 좋게 나오는 값으로 고르면 무엇이 문제인가요?</p><div class="opts"><button data-i="0" data-why="속도의 문제가 아닙니다.">계산이 느려진다</button><button data-i="1">시험 데이터를 미리 본 셈이라, 새 고객에게서는 그 점수가 나오지 않을 수 있다</button><button data-i="2" data-why="시험 데이터는 “처음 보는 고객” 역할을 해야 해서, 고르는 데 쓰면 그 역할을 잃습니다.">문제없다. 시험 데이터가 가장 정확하다</button></div><p class="fb" aria-live="polite"></p></div><div class="q" id="q4-3" data-ok="1" data-ex="비용 단가는 가정입니다. 단가가 100 : 1이면 최소 비용 위치가 약 32.5%로 옮겨 가 80% 정책과 가까워집니다. 숫자는 판단을 돕고, 정책은 사람이 정합니다."><p class="qt">Q3. 단가 50 : 1에서 로지스틱의 목표 재현율 80% 위치(심사 29.8%)는 총비용 5,471로, 기본 0.5(5,154)보다 비쌉니다. 그래도 80%를 고를 수 있는 이유는?</p><div class="opts"><button data-i="0" data-why="계산은 맞습니다. 놓친 34명 × 50 + 심사 3,771명 × 1 = 5,471.">비용 계산이 틀렸기 때문</button><button data-i="1">놓친 청구가 고객 신뢰·규정 위반처럼 단가에 다 담기지 않는 손실을 낳는다고 보고, 재현율을 정책으로 정했기 때문</button><button data-i="2" data-why="반대로 정밀도는 0.051 → 0.040으로 내려갑니다.">재현율이 높을수록 정밀도도 높기 때문</button></div><p class="fb" aria-live="polite"></p></div></div></div></section><section class="part" id="practice"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">7</div><h2>실무로 잇기<span class="en">From page to Colab</span></h2><p>임계값을 정식으로 고르는 코드.</p></div><div class="body"><p>e4.py의 <b>TARGET_RECALL · COST_MISS · COST_REVIEW</b> 세 줄이 이 실험실의 다이얼입니다. f4.py는 기본 0.5 · 목표 재현율 임계값 · 기준선의 비용을 함께 출력합니다.</p><div class="codebox"><div class="tabs" role="tablist"><button role="tab" data-src="src-e4" data-info="초보용 · 다이얼: TARGET_RECALL, COST_MISS, COST_REVIEW">e4.py</button><button role="tab" data-src="src-f4" data-info="정식 코드 · common.py 필요">f4.py</button><button role="tab" data-src="src-common" data-info="공통 코드">common.py</button></div><div class="tools"><span></span><button class="btn small" data-act="copy">복사</button><button class="btn small" data-act="py">.py 받기</button><button class="btn small" data-act="nb">.ipynb 받기</button></div><pre><code></code></pre></div><script type="text/plain" id="src-e4" data-file="e4.py" data-formal="0">
+# AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델 · 4편 초보용 코드 (e4.py)
+# 글 · 안상선 ((주)M-Robo 대표) · CC BY-NC 4.0
+# 규칙: def · for · lambda · 들여쓰기 없음. 맨 위 [다이얼] 몇 줄만 바꿔 다시 실행하세요.
+
+# [다이얼] 목표 재현율, 놓친 청구 1건 비용, 심사 1건 비용 (가상 단가)
+TARGET_RECALL = 0.80
+COST_MISS = 50
+COST_REVIEW = 1
+DATA_URL = 'https://raw.githubusercontent.com/fintech-data/Revolution/main/data/travel%20insurance.csv'
+
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+# ① 데이터 읽기 + 2편의 정리 규칙 (행 삭제 없음, 데이터 증강 없음)
+df = pd.read_csv(DATA_URL)
+df = df.rename(columns={'Agency Type': 'Agency_Type', 'Distribution Channel': 'Distribution_Channel', 'Product Name': 'Product_Name', 'Net Sales': 'Net_Sales', 'Commision (in value)': 'Commision_in_value'})
+df['Gender'] = df['Gender'].fillna('Unknown')
+df['Duration'] = df['Duration'].mask(df['Duration'] <= 0, df.loc[df['Duration'] > 0, 'Duration'].median()).clip(upper=731)
+df['Age'] = df['Age'].mask(df['Age'] > 100, df.loc[df['Age'] <= 100, 'Age'].median())
+df['Net_Sales'] = df['Net_Sales'].clip(df['Net_Sales'].quantile(0.001), df['Net_Sales'].quantile(0.999))
+df['Commision_in_value'] = df['Commision_in_value'].clip(upper=df['Commision_in_value'].quantile(0.999))
+top10 = df['Destination'].value_counts().index[:10]
+df['Destination'] = df['Destination'].where(df['Destination'].isin(top10), 'OTHER')
+
+# ② 인코딩 + 미리 정한 나누기 (층화 80:20, random_state=42)
+y = (df['Claim'] == 'Yes').astype(int)
+X = pd.get_dummies(df.drop(columns='Claim'), drop_first=True, dtype=int)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
+from sklearn.metrics import precision_recall_curve, confusion_matrix
+
+# ③ 표준화 + 학습 데이터 5-Fold 교차검증 확률 (시험 데이터는 임계값 고르는 데 쓰지 않음)
+scaler = StandardScaler().fit(X_train)
+X_train_s = scaler.transform(X_train)
+X_test_s = scaler.transform(X_test)
+lr = LogisticRegression(max_iter=1000, class_weight='balanced', random_state=42)
+oof = cross_val_predict(lr, X_train_s, y_train, cv=StratifiedKFold(n_splits=5, shuffle=True, random_state=42), method='predict_proba')[:, 1]
+
+# ④ 목표 재현율을 만족하는 가장 높은 임계값
+pr_p, pr_r, pr_t = precision_recall_curve(y_train, oof)
+threshold = pr_t[np.where(pr_r[:-1] >= TARGET_RECALL)[0][-1]]
+print('threshold :', round(threshold, 4))
+
+# ⑤ 시험 데이터에 적용
+proba = lr.fit(X_train_s, y_train).predict_proba(X_test_s)[:, 1]
+tn, fp, fn, tp = confusion_matrix(y_test, (proba >= threshold).astype(int)).ravel()
+print('caught :', tp, '| missed :', fn, '| extra reviews :', fp, '| recall :', round(tp / (tp + fn), 3))
+
+# ⑥ 비용 비교: 아무도 심사 안 함(기준선) vs 이 임계값
+print('cost baseline :', y_test.sum() * COST_MISS, '| cost model :', fn * COST_MISS + (tp + fp) * COST_REVIEW)
+</script><script type="text/plain" id="src-f4" data-file="f4.py" data-formal="1">
+"""
+AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델 · 4편 정식 코드 (f4.py)
+글 · 안상선 ((주)M-Robo 대표) · CC BY-NC 4.0
+
+하는 일
+ ① 로지스틱(class_weight='balanced')의 학습 데이터 5-Fold 교차검증 확률을 구한다
+ ② Recall >= 목표치(0.80)를 만족하는 가장 높은 임계값을 고른다 (시험 데이터는 쓰지 않음)
+ ③ 시험 데이터에서 기본 임계값 0.5 와 고른 임계값을 비교한다
+ ④ 비용 다이얼: 놓친 청구 1건 비용 vs 심사 1건 비용 (가상 단가) 으로 총비용을 비교한다
+"""
+import os
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import StratifiedKFold, cross_val_predict
+from sklearn.metrics import precision_recall_curve, confusion_matrix
+import common
+
+PATH = os.environ.get('TI_DATA', common.DATA_URL)
+TARGET_RECALL = 0.80     # [다이얼] 목표 재현율
+COST_MISS = 50           # [다이얼] 놓친 청구 1건 비용 (가상 단가)
+COST_REVIEW = 1          # [다이얼] 추가 심사 1건 비용 (가상 단가)
+
+raw, df, X, y, tr, te, info = common.load_all(PATH)
+X_train, X_test, y_train, y_test = X.iloc[tr], X.iloc[te], y.iloc[tr], y.iloc[te]
+scaler = StandardScaler().fit(X_train)
+Xtr, Xte = scaler.transform(X_train), scaler.transform(X_test)
+
+# ① 교차검증 확률
+lr = LogisticRegression(max_iter=1000, class_weight='balanced', random_state=common.SEED)
+cv5 = StratifiedKFold(n_splits=5, shuffle=True, random_state=common.SEED)
+oof = cross_val_predict(lr, Xtr, y_train, cv=cv5, method='predict_proba')[:, 1]
+
+# ② 임계값 고르기
+prec, rec, thr = precision_recall_curve(y_train, oof)
+i = np.where(rec[:-1] >= TARGET_RECALL)[0][-1]
+threshold = thr[i]
+print(f"threshold={threshold:.4f}  cv_recall={rec[i]:.3f}  cv_precision={prec[i]:.3f}")
+
+# ③ 시험 데이터 비교
+lr.fit(Xtr, y_train)
+proba = lr.predict_proba(Xte)[:, 1]
+rows = []
+for name, t in [('default 0.5', 0.5), ('tuned', threshold)]:
+    tn, fp, fn, tp = confusion_matrix(y_test, (proba >= t).astype(int)).ravel()
+    cost = fn * COST_MISS + (tp + fp) * COST_REVIEW
+    rows.append({'threshold': name, 'value': round(float(t), 4), 'tp': tp, 'fn': fn, 'fp': fp, 'tn': tn,
+                 'recall': tp / (tp + fn), 'precision': tp / (tp + fp), 'flagged': (tp + fp) / len(y_test), 'cost': cost})
+base_cost = int(y_test.sum()) * COST_MISS
+rows.append({'threshold': 'baseline (review nobody)', 'value': None, 'tp': 0, 'fn': int(y_test.sum()), 'fp': 0,
+             'tn': int((y_test == 0).sum()), 'recall': 0.0, 'precision': 0.0, 'flagged': 0.0, 'cost': base_cost})
+print(pd.DataFrame(rows).round(3).to_string(index=False))
+
+# 확률 상위 N명만 심사할 때 찾는 청구 수
+order = np.argsort(-proba)
+cum = np.cumsum(y_test.values[order])
+for n in [100, 500, 1000, 2000, 3000]:
+    print(f"top {n:>5} ({n / len(y_test):.1%}): claims found {cum[n - 1]:>3} ({cum[n - 1] / y_test.sum():.1%})")
+</script><script type="text/plain" id="src-common" data-file="common.py" data-formal="0">
+"""
+AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델 · 공통 코드 (common.py)
+글 · 안상선 ((주)M-Robo 대표) · CC BY-NC 4.0
+
+하는 일
+ ① 여행자보험 데이터 읽기 (공개 학습용 데이터, 63,326건)
+ ② 결측값 · 이상치를 업무 기준으로 고치기 (2편)
+ ③ 범주형 원-핫 인코딩, 종속변수 Claim -> 0/1
+ ④ 미리 정한 학습/시험 나누기 (층화 80:20, random_state=42 -> data/split.csv 와 같음)
+ ⑤ 기준선: "모두 청구 없음"으로만 답하기
+
+원칙: 데이터 증강(SMOTE 등 합성 데이터 생성)은 쓰지 않는다. 원본 행만 쓴다.
+"""
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
+DATA_URL = "https://raw.githubusercontent.com/fintech-data/Revolution/main/data/travel%20insurance.csv"
+SEED = 42
+
+RENAME = {'Agency Type': 'Agency_Type', 'Distribution Channel': 'Distribution_Channel',
+          'Product Name': 'Product_Name', 'Net Sales': 'Net_Sales',
+          'Commision (in value)': 'Commision_in_value'}
+NUM_COLS = ['Duration', 'Net_Sales', 'Commision_in_value', 'Age']
+CAT_COLS = ['Agency', 'Agency_Type', 'Distribution_Channel', 'Product_Name', 'Destination', 'Gender']
+
+
+def load_raw(path=DATA_URL):
+    """① 원본 데이터 읽기 (열 이름의 공백·괄호를 밑줄로)."""
+    return pd.read_csv(path).rename(columns=RENAME)
+
+
+def clean(df):
+    """② 결측값 · 이상치를 업무 기준으로 고친다. 행은 하나도 지우지 않는다.
+
+    - Gender 결측(약 71%) -> 'Unknown' 범주
+    - Duration 0 이하 -> 정상값(>0)의 중앙값, 731일(2년) 초과 -> 731
+    - Age 100 초과(118세 984건 등) -> 정상 나이(<=100)의 중앙값
+    - Net_Sales 상·하위 0.1%, Commision 상위 0.1% -> 경계값으로 고정(윈저라이징)
+    - Destination 149개국 -> 상위 10개국 + OTHER
+    """
+    df = df.copy()
+    df['Gender'] = df['Gender'].fillna('Unknown').replace('None', 'Unknown')
+    dur_med = df.loc[df['Duration'] > 0, 'Duration'].median()
+    df['Duration'] = df['Duration'].mask(df['Duration'] <= 0, dur_med).clip(upper=731)
+    age_med = df.loc[df['Age'] <= 100, 'Age'].median()
+    df['Age'] = df['Age'].mask(df['Age'] > 100, age_med)
+    lo, hi = df['Net_Sales'].quantile(0.001), df['Net_Sales'].quantile(0.999)
+    df['Net_Sales'] = df['Net_Sales'].clip(lo, hi)
+    c_hi = df['Commision_in_value'].quantile(0.999)
+    df['Commision_in_value'] = df['Commision_in_value'].clip(upper=c_hi)
+    top10 = df['Destination'].value_counts().index[:10]
+    df['Destination'] = df['Destination'].where(df['Destination'].isin(top10), 'OTHER')
+    info = {'duration_median': dur_med, 'age_median': age_med, 'net_low': lo, 'net_high': hi,
+            'comm_high': c_hi, 'top10_destinations': list(top10)}
+    return df, info
+
+
+def encode(df):
+    """③ X(원-핫) 와 y(청구=1) 만들기."""
+    y = (df['Claim'] == 'Yes').astype(int)
+    X = pd.get_dummies(df.drop(columns='Claim'), drop_first=True, dtype=int)
+    return X, y
+
+
+def split_index(y):
+    """④ 미리 정한 나누기: 행 번호 기준 층화 80:20 (data/split.csv 와 같은 결과)."""
+    idx = np.arange(len(y))
+    tr, te = train_test_split(idx, test_size=0.2, stratify=y, random_state=SEED)
+    return tr, te   # 순서도 노트북의 train_test_split 결과와 같게 유지
+
+
+def load_all(path=DATA_URL):
+    """①~④ 한 번에: 정리된 df, X, y, 학습/시험 행 번호, 처리 정보."""
+    raw = load_raw(path)
+    df, info = clean(raw)
+    X, y = encode(df)
+    tr, te = split_index(y)
+    return raw, df, X, y, tr, te, info
+
+
+def baseline(y_true):
+    """⑤ 기준선: 모두 '청구 없음'으로 답할 때의 정확도와 재현율."""
+    acc = float((y_true == 0).mean())
+    return {'accuracy': acc, 'recall': 0.0}
+</script>
+<details class="run"><summary>실행 결과 보기 (정식 코드 f4.py 를 실제로 실행한 출력)</summary><pre>threshold=0.4049  cv_recall=0.801  cv_precision=0.039
+               threshold  value  tp  fn   fp    tn  recall  precision  flagged  cost
+             default 0.5  0.500 135  50 2519  9962   0.730      0.051    0.210  5154
+                   tuned  0.405 151  34 3620  8861   0.816      0.040    0.298  5471
+baseline (review nobody)    NaN   0 185    0 12481   0.000      0.000    0.000  9250
+top   100 (0.8%): claims found   9 (4.9%)
+top   500 (3.9%): claims found  50 (27.0%)
+top  1000 (7.9%): claims found  89 (48.1%)
+top  2000 (15.8%): claims found 126 (68.1%)
+top  3000 (23.7%): claims found 140 (75.7%)</pre></details></div></div></section><section class="part" id="prompt"><div class="wrap"><div class="part-head" style="--kc:var(--seq)"><div class="hex">✦</div><h2>AI와 함께 더 공부하기<span class="en">AI tutor prompt</span></h2><p>ChatGPT·Claude·Gemini 등에 그대로 붙여 넣으세요. [ ] 안만 바꾸면 됩니다.</p></div><div class="body"><div class="prompt"><pre id="prompt-4"># 역할
+당신은 보험 데이터 분석을 가르치는 친절한 튜터입니다. 저는 「AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델」 4편 「임계값과 비용 실험실」을 공부하고 있습니다.
+
+# 배경
+- 데이터: 공개 학습용 여행자보험 데이터 63,326건 (https://raw.githubusercontent.com/fintech-data/Revolution/main/data/travel%20insurance.csv)
+- 열: Agency(판매점) · Agency Type(판매점 형태) · Distribution Channel(판매 채널) · Product Name(상품) · Duration(보험 기간, 일) · Destination(여행 국가) · Net Sales(순매출, 음수=환불) · Commision (in value)(수수료) · Gender(성별, 71% 결측) · Age(나이) · Claim(보험금 청구 Yes/No = 맞힐 대상)
+- 청구(Claim=Yes)는 927건(1.46%)뿐인 불균형 데이터입니다.
+- 학습/시험 나누기는 층화 80:20, random_state=42 로 미리 정해져 있습니다(시험 12,666건, 청구 185건).
+- 내 수준: [예: 파이썬은 조금, 통계는 처음]
+
+# 해 줄 일
+1. 로지스틱의 교차검증 확률로 재현율 [0.80] 을 만족하는 임계값을 찾게 도와 주세요.
+2. 놓친 청구 1건 비용 [50], 심사 1건 비용 [1] 일 때 총비용을 기준선과 비교해 주세요.
+3. 비용 비율을 바꾸면 최적 심사 비율이 어떻게 움직이는지 표로 보여 주세요.
+4. 임계값을 시험 데이터로 고르면 왜 안 되는지 설명해 주세요.
+
+# 반드시 지킬 것
+- 기호나 약어(TP, FN, Recall 등)는 처음 나올 때 한 줄로 설명하기
+- 미리 정한 학습/시험 나누기를 그대로 쓰기 (다시 나누지 않기)
+- 전처리(표준화·대체값 계산)는 학습 데이터로만 하기 (데이터 누수 금지)
+- 데이터 증강(SMOTE 등 가짜 행 만들기)은 쓰지 않기. 불균형은 class_weight 나 임계값으로 다루기
+- 모든 점수는 기준선(&quot;모두 청구 없음&quot;: 정확도 98.5%, 재현율 0%)과 함께 말하기
+- 코드는 Google Colab 에서 바로 실행되게, random_state=42 고정
+- 내가 바꿀 줄에는 # [변경] 주석 달기
+
+# 답변 형식
+1) 한 문단 요약  2) 단계별 설명(비유 하나 포함)  3) 실행할 코드  4) 결과를 읽는 법  5) 내가 스스로 확인할 질문 2개</pre></div><div class="btns"><button class="btn small" data-copy="prompt-4">프롬프트 복사</button><button class="btn small" data-save="prompt-4" data-name="ai_prompt_4.txt">.txt 받기</button></div></div></div></section><section class="part" id="glossary"><div class="wrap"><div class="part-head" style="--kc:var(--core)"><div class="hex">?</div><h2>용어 사전<span class="en">Glossary</span></h2><p>비유로 먼저, 뜻은 그다음.</p></div><div class="body"><dl class="gloss"><div><dt>점수 · 확률</dt><dd><i>줄 세우기 번호표.</i> 모델이 고객마다 매기는 청구 위험 정도.</dd></div><div><dt>임계값</dt><dd><i>합격선.</i> 이 점수 이상이면 청구 위험으로 판정. 낮추면 심사 비율이 오른다.</dd></div><div><dt>심사 비율</dt><dd><i>체에 걸러 내는 양.</i> 청구 위험으로 판정된 고객의 비율.</dd></div><div><dt>오탐 (FP)</dt><dd><i>헛걸음.</i> 청구하지 않을 고객을 심사한 것.</dd></div><div><dt>미탐 (FN)</dt><dd><i>놓친 진주.</i> 청구할 고객을 저위험으로 통과시킨 것.</dd></div><div><dt>비용 행렬</dt><dd><i>실수마다 다른 가격표.</i> 놓친 청구 1건과 심사 1건의 상대 단가.</dd></div><div><dt>교차검증</dt><dd><i>돌아가며 모의고사.</i> 학습 데이터를 5조각으로 나눠, 각 조각을 나머지로 학습한 모델이 채점.</dd></div><div><dt>목표 재현율</dt><dd><i>놓치지 않겠다는 약속.</i> “청구 고객의 80%는 찾는다” 같은 정책.</dd></div></dl></div></div></section><section class="part" id="author-sec"><div class="wrap"><div class="body"><a class="teach-link" href="answers.html#a4">강사·튜터라면 → 교육자용 정답 (4편): 정답 · 채점 기준 · 강의 멘트</a>
+<div class="card"><h3>글 · 안상선 ((주)M-Robo 대표)</h3><p class="cap">(주)M-Robo 대표. 금융·보험 데이터와 AI를 현장에서 쓰는 방법을, 버튼만 눌러 따라 할 수 있는 교재로 만듭니다.</p></div></div></div></section><section class="outro" id="outro"><div class="wrap"><div class="body"><h2>수고하셨습니다!</h2>
+<img class="scene" src="assets/s4.webp" alt="다이얼 세 개와 저울 앞에서 놓친 청구와 심사 일감을 저울질하는 조교" width="1440" height="800" loading="lazy">
+<div class="chat"><div class="say actuary"><div class="av" data-face="explain" aria-hidden="true"><img src="assets/av_actuary_explain.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>박사<span class="npc" title="NPC">NPC</span></b><ul><li>임계값(심사 비율)은 모델이 아니라 사람이 정하는 다이얼이다</li><li>최적점은 비용 단가에 따라 움직인다: 50 : 1이면 약 13%, 100 : 1이면 약 32.5% (로지스틱)</li><li>정식으로는 학습 데이터 교차검증으로 고른다: 목표 재현율 80% → 임계값 0.405</li></ul></div></div><div class="say bomi"><div class="av" data-face="proud" aria-hidden="true"><img src="assets/av_bomi_proud.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>조교</b><p>다이얼을 하나씩만 바꾸니까 무엇 때문에 달라졌는지 바로 보여요. 머니로보는 비용 다이얼만 돌리고 싶어 했지만요.</p></div></div><div class="say fly"><div class="av" data-face="idea" aria-hidden="true"><img src="assets/av_fly_idea.webp" alt="" width="160" height="160" loading="lazy"></div><div class="sbub"><b>초파리 연구원</b><p>그런데 이 판정, 계산식 없이 종이 한 장으로 할 수 있어요? 현장엔 파이썬이 없거든요. 저는 손이 작아서 계산기도 못 눌러요.</p></div></div></div>
+<div class="nav-eps"><a class="btn" href="3_five_models.html">← 이전 편: 모델 다섯, 경계 다섯</a><a class="btn" href="index.html">처음 화면</a><a class="btn primary" href="5_surrogate_tree.html">다음 편: 최고 모델을 흉내 내는 나무 →</a></div></div></div></section><footer><div class="wrap"><p><b>임계값과 비용 실험실</b> · AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델</p><p>글 · 안상선 ((주)M-Robo 대표)</p>
+<p><b>설명용 모형인 것:</b> 이 시리즈는 공개 학습용 여행자보험 데이터(63,326건)를 그대로 씁니다. 가상 데이터를 만들거나 데이터를 증강하지 않습니다. 브라우저 실습은 교육용 구현이라 정식 코드와 숫자가 조금 다를 수 있으며, 다른 경우 그 자리에 밝힙니다. 실험실의 점수는 3편의 58개 특성 모델이 시험 데이터에 매긴 실제 점수이며, 점수가 같은 고객은 행 순서대로 줄을 세웠습니다(0.5% 간격).</p><p><b>주의:</b> 교육용 예시이며 보험 가입·보험료·보상에 대한 조언이 아닙니다. 실제 보험 심사와 보험료 산정은 감독 규정과 계리 기준을 따릅니다. 특정 집단에 불리한 특성(예: 성별·나이)의 사용은 금지되거나 제한될 수 있습니다.</p>
+<p><b>데이터:</b> 공개 학습용 Travel Insurance 데이터 (<a href="https://raw.githubusercontent.com/fintech-data/Revolution/main/data/travel%20insurance.csv">원본 CSV</a>) · 학습/시험 나누기 <a href="data/split.csv">data/split.csv</a></p>
+<p><b>참고:</b> scikit-learn User Guide (Nearest Neighbors, SVM, Linear Models, Decision Trees, Model evaluation) · 플레이북 「인터랙티브 교육 HTML 시리즈 제작 플레이북 v3」</p>
+<p><a href="https://creativecommons.org/licenses/by-nc/4.0/deed.ko">CC BY-NC 4.0</a> — 출처 표기 예: “AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델, 글 · 안상선 ((주)M-Robo 대표), CC BY-NC 4.0”</p></div></footer>
+<p id="lang-note" class="note" hidden style="position:fixed;bottom:12px;left:12px;right:12px;z-index:30"></p>
+<script>const SITE="https://adminmrobo.github.io/ai-biz-insurtech-01/";
+// ---------- 공통: 테마 색 읽기 ----------
+function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()}
+const REDRAW=[];function onTheme(f){REDRAW.push(f)}
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>REDRAW.forEach(f=>f()))}catch(e){}
+new MutationObserver(()=>REDRAW.forEach(f=>f())).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+// 캔버스 준비 (선명하게)
+function prep(cv,h){const r=cv.getBoundingClientRect();const w=Math.max(200,r.width||cv.parentNode.clientWidth||600);const d=window.devicePixelRatio||1;cv.width=w*d;cv.height=h*d;cv.style.height=h+'px';const c=cv.getContext('2d');c.setTransform(d,0,0,d,0,0);return {c,w,h}}
+let RZ;addEventListener('resize',()=>{clearTimeout(RZ);RZ=setTimeout(()=>REDRAW.forEach(f=>f()),150)});
+const fmtP=(x,d=1)=>(x*100).toFixed(d)+'%';
+const nf=n=>Number(n).toLocaleString('en-US');
+// ---------- 확인 문제 ----------
+document.querySelectorAll('.q').forEach(q=>{const ok=q.dataset.ok,fb=q.querySelector('.fb');q.querySelectorAll('.opts button').forEach(b=>b.addEventListener('click',()=>{
+ q.querySelectorAll('.opts button').forEach(x=>x.classList.remove('right','wrong'));
+ if(b.dataset.i===ok){b.classList.add('right');fb.innerHTML='<b>정답입니다.</b> '+q.dataset.ex}else{b.classList.add('wrong');fb.innerHTML='<b>다시 생각해 보세요.</b> '+(b.dataset.why||'')}}))});
+// ---------- 복사 · 내려받기 ----------
+function copyTxt(t,btn){const o=btn.textContent;const done=()=>{btn.textContent='복사됨';setTimeout(()=>btn.textContent=o,1300)};try{navigator.clipboard.writeText(t).then(done,()=>{btn.textContent='직접 선택해 복사하세요'})}catch(e){btn.textContent='직접 선택해 복사하세요'}}
+function saveFile(name,text,type){try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:type||'text/plain'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}catch(e){}}
+function toIpynb(src,formal){const lines=src.split('\n');const cells=[];let cur=[];
+ lines.forEach(l=>{if(/^# [①-⑳]/.test(l)&&cur.join('').trim()){cells.push(cur);cur=[]}cur.push(l)});if(cur.join('').trim())cells.push(cur);
+ const mk=a=>{while(a.length&&!a[a.length-1].trim())a.pop();return {cell_type:'code',metadata:{},execution_count:null,outputs:[],source:a.map((l,i)=>i<a.length-1?l+'\n':l)}};
+ const out=cells.map(mk).filter(c=>c.source.join('').trim());
+ if(formal)out.unshift(mk(['# 공통 코드 내려받기 (Colab)','!wget -q -O common.py '+SITE+'code/common.py']));
+ return JSON.stringify({cells:out,metadata:{kernelspec:{name:'python3',display_name:'Python 3'},language_info:{name:'python'}},nbformat:4,nbformat_minor:5},null,1)}
+document.querySelectorAll('.codebox').forEach(box=>{const tabs=[...box.querySelectorAll('.tabs button')];const pre=box.querySelector('pre code');const info=box.querySelector('.tools span');
+ let curId=null;function show(b){tabs.forEach(t=>t.setAttribute('aria-selected',t===b?'true':'false'));curId=b.dataset.src;const s=document.getElementById(curId);pre.textContent=s.textContent.replace(/^\n/,'');info.textContent=b.dataset.info||''}
+ tabs.forEach(t=>t.addEventListener('click',()=>show(t)));if(tabs[0])show(tabs[0]);
+ box.querySelector('[data-act=copy]').addEventListener('click',e=>copyTxt(pre.textContent,e.currentTarget));
+ box.querySelector('[data-act=py]').addEventListener('click',()=>{const s=document.getElementById(curId);saveFile(s.dataset.file,pre.textContent,'text/x-python')});
+ box.querySelector('[data-act=nb]').addEventListener('click',()=>{const s=document.getElementById(curId);saveFile(s.dataset.file.replace(/\.py$/,'.ipynb'),toIpynb(pre.textContent,s.dataset.formal==='1'),'application/json')})});
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',e=>copyTxt(document.getElementById(b.dataset.copy).textContent,e.currentTarget)));
+document.querySelectorAll('[data-save]').forEach(b=>b.addEventListener('click',()=>saveFile(b.dataset.name,document.getElementById(b.dataset.save).textContent)));
+// ---------- 상태 캐릭터 ----------
+function robo(id,st){const w=document.getElementById(id);if(!w||w.dataset.st===st)return;w.dataset.st=st;w.querySelectorAll('[data-rs]').forEach(e=>e.hidden=e.dataset.rs!==st)}
+// ---------- 식구 카드: 모습 바꾸기 ----------
+document.querySelectorAll('.crew .moods button').forEach(b=>b.addEventListener('click',()=>{const card=b.closest('.crew');
+ card.querySelectorAll('.moods button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
+ card.querySelectorAll('.cf').forEach(f=>f.classList.toggle('on',f.dataset.face===b.dataset.fb))}));
+// ---------- 막대 (기준선 포함) ----------
+function setBar(el,v,base){el.querySelector('.fill').style.width=Math.max(0,Math.min(1,v))*100+'%';const bl=el.querySelector('.base');if(bl){if(base==null)bl.hidden=true;else{bl.hidden=false;bl.style.left='calc('+base*100+'% - 1px)'}}el.querySelector('.v').textContent=fmtP(v)}
+// ---------- 혼동행렬 ----------
+function cmHTML(m){return `<div></div><div class="h">판정: 청구 없음</div><div class="h">판정: 청구 위험</div>
+ <div class="h rh">실제 미청구</div><div class="c ok"><b>${nf(m.tn)}</b><span>정상 통과</span></div><div class="c"><b>${nf(m.fp)}</b><span>추가 심사 (오탐)</span></div>
+ <div class="h rh">실제 청구</div><div class="c bad"><b>${nf(m.fn)}</b><span>⚠ 놓친 청구</span></div><div class="c ok"><b>${nf(m.tp)}</b><span>찾은 청구</span></div>`}
+
+const D={"lab":{"cap":{"knn":[0,5,8,12,13,17,22,29,34,41,43,44,46,51,54,56,57,60,62,62,64,66,68,73,74,79,86,87,88,90,91,92,94,97,98,99,102,102,102,102,102,102,102,103,103,104,105,105,108,109,109,111,114,114,115,115,115,116,116,116,116,116,116,117,118,118,119,121,121,122,122,122,122,122,122,124,124,124,127,129,130,130,131,131,131,133,135,135,135,135,135,135,135,136,136,137,139,139,139,139,142,142,142,142,142,142,142,142,143,143,143,144,146,146,147,147,147,147,148,148,148,149,150,150,150,150,150,151,151,151,152,153,153,153,153,153,153,154,154,154,154,154,154,154,154,156,157,157,158,158,159,160,160,160,161,161,162,162,163,163,164,164,164,164,165,165,167,168,168,168,170,170,171,171,171,171,171,171,171,173,173,173,173,173,174,175,176,178,178,179,180,180,181,181,181,182,183,183,185,185,185],"svc":[0,0,2,5,10,21,25,32,36,39,41,47,51,57,58,61,65,67,72,77,79,84,90,93,95,101,104,104,106,108,109,111,116,121,122,126,128,132,135,136,136,136,139,140,141,144,144,145,146,146,147,147,148,150,150,151,152,153,153,153,153,154,154,155,155,156,156,157,157,158,158,160,160,161,161,161,161,162,162,162,163,164,164,164,164,164,164,164,164,164,164,164,164,164,164,164,165,165,165,167,168,168,168,169,169,169,169,169,169,169,169,171,171,171,171,172,172,173,173,174,174,174,174,174,175,175,176,177,177,177,177,177,177,178,178,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,180,180,180,180,181,181,181,181,182,182,182,182,183,183,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185,185],"lsvm":[0,6,14,24,28,33,38,43,47,52,55,64,70,75,80,85,89,89,96,101,108,112,117,118,119,120,120,120,122,123,123,126,127,128,129,130,130,130,131,131,133,133,135,137,137,139,139,140,142,142,143,145,145,147,148,148,149,149,149,150,150,150,151,154,154,155,156,156,156,156,157,157,157,158,158,159,160,160,160,160,161,161,162,162,163,166,166,166,166,166,168,168,168,170,172,172,172,172,173,173,173,173,173,173,173,173,173,173,173,173,174,174,174,175,175,175,176,176,176,176,176,176,176,176,176,176,176,176,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,178,178,178,178,178,178,178,178,179,179,179,180,180,180,180,180,180,180,180,180,180,180,180,181,181,181,181,181,181,182,183,183,183,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,185,185,185,185,185,185,185],"lr":[0,7,14,25,29,32,39,44,50,54,57,66,70,76,81,87,90,92,95,98,104,110,115,117,118,119,121,121,121,122,124,126,126,128,129,130,130,130,131,131,133,134,135,137,137,139,139,140,142,143,145,146,147,147,147,149,149,150,151,151,152,153,154,154,154,156,156,156,156,156,156,157,157,157,158,158,158,160,160,160,162,163,163,163,164,164,165,165,166,166,167,168,168,169,169,171,173,173,173,173,173,173,173,173,173,173,174,174,174,174,174,174,175,175,175,175,175,176,176,176,176,176,176,176,176,176,176,176,176,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,177,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,179,180,180,180,180,180,180,183,183,183,183,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,184,185,185,185,185,185,185],"dt":[0,6,19,26,32,36,40,44,49,54,62,68,73,73,77,81,84,87,93,96,100,102,104,110,113,116,117,119,121,122,123,123,124,124,126,127,127,131,131,132,133,133,133,133,133,134,134,135,135,135,136,136,136,136,137,138,140,141,143,143,145,146,146,146,147,147,148,148,148,149,149,150,151,151,152,153,154,154,156,157,157,157,157,157,159,159,160,160,162,162,162,163,163,163,163,165,165,166,166,166,166,167,167,167,167,167,167,167,168,168,170,170,171,171,171,171,171,171,172,172,172,172,172,172,173,173,173,173,173,173,173,174,174,174,175,175,175,176,176,177,177,177,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,178,179,179,179,179,179,179,179,180,180,183,183,184,184,185]},"step":0.5,"n":12666,"claims":185,"default_flag":{"knn":0.16729827885678195,"svc":0.213484920258961,"lsvm":0.19469445760303175,"lr":0.20953734407074057,"dt":0.1716406126638244},"lr_tuned_flag":0.29772619611558504,"lr_tuned_thr":0.4048838710251239},"models":[["lr","로지스틱"],["svc","SVC (RBF)"],["lsvm","선형 SVM"],["dt","의사결정나무"],["knn","KNN"]]};
+const LB=D.lab,N=LB.n,C=LB.claims,NAMES=Object.fromEntries(D.models);let M='lr';const REC=[];
+const MCAP={lr:'로지스틱: 확률을 내는 모델. 3편 ROC-AUC 0.839 (공동 1위).',svc:'SVC (RBF): 점수는 경계까지의 거리. ROC-AUC 0.825.',lsvm:'선형 SVM: 점수는 직선까지의 거리. ROC-AUC 0.839.',dt:'의사결정나무 (깊이 6): 점수는 잎의 청구 비율이라 같은 점수가 많습니다. ROC-AUC 0.818.',knn:'KNN (K=15): 점수는 이웃 15명 중 청구 비율(0, 1/15, 2/15 …)이라 같은 점수가 아주 많습니다. ROC-AUC 0.691.'};
+function stateAt(m,qi){const cap=LB.cap[m][qi];const k=Math.round(qi*LB.step/100*N);return {tp:cap,fp:k-cap,fn:C-cap,tn:N-k-(C-cap),k}}
+function cost(s,cm,cr){return s.fn*cm+s.k*cr}
+function dials(){return {m:M,q:+document.getElementById('d-q').value,cm:+document.getElementById('d-cm').value,cr:+document.getElementById('d-cr').value}}
+function bestQ(m,cm,cr){let b=0,bc=1e18;for(let i=0;i<LB.cap[m].length;i++){const c=cost(stateAt(m,i),cm,cr);if(c<bc){bc=c;b=i}}return b}
+function drawCost(){const d=dials(),cv=document.getElementById('cost-cv');const {c,w,h}=prep(cv,220);const L=58,R=10,T=10,B=30;const n=121;
+ const cs=[];for(let i=0;i<n;i++)cs.push(cost(stateAt(d.m,i),d.cm,d.cr));const base=C*d.cm;const mx=Math.max(base,...cs)*1.05;
+ const X=i=>L+i/(n-1)*(w-L-R),Y=v=>T+(1-v/mx)*(h-T-B);c.fillStyle=cssv('--surface');c.fillRect(0,0,w,h);c.font='11px '+cssv('--f-body');
+ c.strokeStyle=cssv('--grid');c.fillStyle=cssv('--muted');c.textAlign='right';const st=Math.pow(10,Math.floor(Math.log10(mx/4)));const st2=mx/st>20?st*5:mx/st>8?st*2:st;
+ for(let v=0;v<=mx;v+=st2){c.beginPath();c.moveTo(L,Y(v));c.lineTo(w-R,Y(v));c.stroke();c.fillText(nf(v),L-4,Y(v)+4)}
+ c.textAlign='center';[0,10,20,30,40,50].forEach(p=>c.fillText(p+'%',X(p*2),h-12));c.textAlign='right';c.fillText('심사 비율 →',w-R,h-1);
+ c.strokeStyle=cssv('--ink');c.setLineDash([4,4]);c.beginPath();c.moveTo(L,Y(base));c.lineTo(w-R,Y(base));c.stroke();c.setLineDash([]);c.fillStyle=cssv('--ink');c.textAlign='left';c.fillText('기준선 '+nf(base),L+4,Y(base)-4);
+ c.strokeStyle=cssv('--c-claim');c.lineWidth=2;c.beginPath();cs.forEach((v,i)=>{i?c.lineTo(X(i),Y(v)):c.moveTo(X(i),Y(v))});c.stroke();c.lineWidth=1;
+ const bq=bestQ(d.m,d.cm,d.cr);c.fillStyle=cssv('--c-4');c.beginPath();c.arc(X(bq),Y(cs[bq]),5,0,7);c.fill();
+ c.fillStyle=cssv('--ink');c.strokeStyle=cssv('--surface');c.lineWidth=2;c.beginPath();c.arc(X(d.q),Y(cs[d.q]),6,0,7);c.fill();c.stroke();c.lineWidth=1;
+ document.getElementById('cost-cap').innerHTML='검은 점 = 지금 설정 ('+(d.q*LB.step).toFixed(1)+'%, '+nf(cs[d.q])+') · 초록 점 = 최소 비용 위치 (<b>'+(bq*LB.step).toFixed(1)+'%</b>, '+nf(cs[bq])+') · 점선 = 기준선(아무도 심사 안 함).';
+ window._costs=cs;const tip=document.getElementById('cost-tip');cv.onmousemove=ev=>{const r=cv.getBoundingClientRect(),mx2=ev.clientX-r.left;const i=Math.round((mx2-L)/(w-L-R)*(n-1));if(i<0||i>=n){tip.hidden=true;return}tip.hidden=false;tip.style.left=X(i)+'px';tip.style.top=Y(cs[i])+'px';const s=stateAt(d.m,i);tip.textContent=(i*LB.step).toFixed(1)+'% · 비용 '+nf(cs[i])+' · 찾은 청구 '+s.tp};cv.onmouseleave=()=>tip.hidden=true}
+const FACE={smile:'미소',curious:'궁금',surprised:'놀람',worried:'곤란',proud:'뿌듯'};
+function update(){const d=dials();const s=stateAt(d.m,d.q);
+ document.getElementById('d-qv').textContent=(d.q*LB.step).toFixed(1)+'% ('+nf(s.k)+'명)';document.getElementById('d-cmv').textContent=d.cm;document.getElementById('d-crv').textContent=d.cr;
+ document.getElementById('d-qnote').textContent='이 모델의 기본 임계값은 심사 '+(LB.default_flag[d.m]*100).toFixed(1)+'% 위치입니다.';
+ document.getElementById('cm4').innerHTML=cmHTML(s);
+ setBar(document.getElementById('l-rec'),s.tp/C,0);setBar(document.getElementById('l-prec'),s.k?s.tp/s.k:0,C/N);setBar(document.getElementById('l-flag'),s.k/N,null);
+ const now=cost(s,d.cm,d.cr),base=C*d.cm,all=N*d.cr+0;document.getElementById('c-now').textContent=nf(now);document.getElementById('c-base').textContent=nf(base);document.getElementById('c-all').textContent=nf(all);
+ document.getElementById('model-cap').textContent=MCAP[d.m];drawCost();
+ const rec=s.tp/C,fl=s.k/N;let face='curious',line='조금 더 움직여 볼까요? 비용 곡선의 가장 낮은 점을 찾아봐요.';
+ if(fl>0.5){face='surprised';line='절반 넘게 심사하면 보상 센터 일손이 모자라요!'}else if(rec<0.3){face='worried';line='놓친 청구가 너무 많아요… 심사 비율을 조금 올려 볼까요?'}else if(now<base*0.6){face='proud';line='기준선보다 총비용이 '+Math.round((1-now/base)*100)+'% 줄었어요!'}
+ document.getElementById('bomi-face').textContent=FACE[face];document.getElementById('bomi-react').querySelector('.av').dataset.face=face;document.getElementById('bomi-img').src='assets/av_bomi_'+face+'.webp';document.getElementById('bomi-line').textContent=line;
+ robo('robo-4',fl>0.5?'confused':(now>=base?'wrong':(now<base*0.6?'success':'thinking')))}
+['d-q','d-cm','d-cr'].forEach(id=>document.getElementById(id).addEventListener('input',update));
+document.querySelectorAll('[data-model]').forEach(b=>b.addEventListener('click',()=>{M=b.dataset.model;document.querySelectorAll('[data-model]').forEach(x=>x.setAttribute('aria-pressed',x===b));update()}));
+document.getElementById('go-default').addEventListener('click',()=>{document.getElementById('d-q').value=Math.round(LB.default_flag[M]*100/LB.step);update()});
+document.getElementById('go-tuned').addEventListener('click',()=>{M='lr';document.querySelectorAll('[data-model]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.model==='lr'));document.getElementById('d-q').value=Math.round(LB.lr_tuned_flag*100/LB.step);update()});
+document.getElementById('go-best').addEventListener('click',()=>{const d=dials();document.getElementById('d-q').value=bestQ(d.m,d.cm,d.cr);update()});
+function renderRec(){const tb=document.getElementById('rec-body');if(!REC.length){tb.innerHTML='<tr><td colspan="10" class="cap">아직 기록이 없습니다. 다이얼을 맞추고 “이 설정 기록하기”를 누르세요.</td></tr>';return}
+ tb.innerHTML=REC.map((r,i)=>{let ch='—';if(i>0){const p=REC[i-1];const n=['m','q','cm','cr'].filter(k=>p[k]!==r[k]).length;ch=n===1?'<span class="pill pass">1개</span>':n===0?'<span class="pill warn">0개 (같은 설정)</span>':'<span class="pill fail">'+n+'개 · 한 번에 하나만!</span>'}
+  return `<tr><td class="r">${i+1}</td><td>${NAMES[r.m]}</td><td class="r">${(r.q*LB.step).toFixed(1)}%</td><td class="r">${r.cm}</td><td class="r">${r.cr}</td><td class="r">${r.rec.toFixed(3)}</td><td class="r">${r.prec.toFixed(3)}</td><td class="r">${nf(r.cost)}</td><td class="r">${(r.cost/r.base*100).toFixed(0)}%</td><td>${ch}</td></tr>`}).join('')}
+document.getElementById('rec-add').addEventListener('click',()=>{const d=dials(),s=stateAt(d.m,d.q);REC.push({...d,rec:s.tp/C,prec:s.k?s.tp/s.k:0,cost:cost(s,d.cm,d.cr),base:C*d.cm});renderRec()});
+document.getElementById('rec-clear').addEventListener('click',()=>{REC.length=0;renderRec()});
+renderRec();update();onTheme(drawCost);
+</script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+{
+ "version": "1.0",
+ "page": "2_data_cleaning",
+ "nodes": [
+  {
+   "id": "lab:concept/iqr",
+   "type": "Term",
+   "label": {
+    "ko": "IQR",
+    "en": "interquartile range"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#m2",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "사분위 범위 = Q3 − Q1. 가운데 50%의 폭."
+   }
+  },
+  {
+   "id": "lab:concept/missing-and-outliers",
+   "type": "Concept",
+   "label": {
+    "ko": "결측값과 이상치",
+    "en": "missing values and outliers"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#outro",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "결측값은 빠진 값, 이상치는 전체 패턴에서 크게 벗어난 값. 원인 확인 후 처리."
+   }
+  },
+  {
+   "id": "lab:concept/training-development",
+   "type": "Concept",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#author-sec",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:concept/data-augmentation",
+   "type": "Concept",
+   "label": {
+    "ko": "데이터 증강",
+    "en": "Data augmentation"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#checklist",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ai",
+    "dl",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "원본을 조금씩 바꿔 시료를 늘리는 것. 늘린 시료는 원본과 닮았다."
+   }
+  },
+  {
+   "id": "lab:concept/train-test-split",
+   "type": "Method",
+   "label": {
+    "ko": "학습/시험 나누기",
+    "en": "Train-test split"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "20%를 시험지로 봉인하고 80%로만 학습"
+   }
+  },
+  {
+   "id": "lab:concept/weight",
+   "type": "Concept",
+   "label": {
+    "ko": "가중치",
+    "en": "Weight"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#practice",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ai",
+    "dl",
+    "neuro"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "이 입력을 얼마나 크게 들을지 정하는 값. 시냅스의 강도에 해당한다."
+   }
+  },
+  {
+   "id": "lab:method/knn",
+   "type": "Method",
+   "label": {
+    "ko": "KNN",
+    "en": "k-nearest neighbors"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#dur-cap",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "새 데이터와 가장 가까운 K개 이웃의 다수결(또는 평균)로 예측하는 알고리즘."
+   }
+  },
+  {
+   "id": "lab:concept/mean",
+   "type": "Concept",
+   "label": {
+    "ko": "평균",
+    "en": "mean"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#practice",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "모든 값을 더해 개수로 나눈 값. 데이터의 가운데를 나타냄."
+   }
+  },
+  {
+   "id": "lab:concept/random-state",
+   "type": "Concept",
+   "label": {
+    "ko": "random_state (시작 번호)",
+    "en": "random seed (random_state)"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "무작위 섞기의 시작 번호. 같은 번호면 같은 결과가 다시 나온다. 재현성 도구이지 튜닝 대상이 아니다."
+   }
+  },
+  {
+   "id": "lab:method/svm",
+   "type": "Method",
+   "label": {
+    "ko": "SVM",
+    "en": "support vector machine"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#dur-cap",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "두 클래스 사이 여백(마진)이 가장 넓은 경계를 찾는 분류 알고리즘."
+   }
+  },
+  {
+   "id": "lab:concept/quartile",
+   "type": "Concept",
+   "label": {
+    "ko": "사분위수",
+    "en": "quartile"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#glossary",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "데이터를 크기순으로 4등분하는 값. Q1(25%), Q2(중앙값), Q3(75%)."
+   }
+  },
+  {
+   "id": "lab:concept/accuracy-paradox",
+   "type": "Concept",
+   "label": {
+    "ko": "정확도의 함정",
+    "en": "Accuracy paradox"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#outro",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "data",
+    "stats",
+    "ai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "양성이 드물면 모두 음성이라고 해도 정확도가 높게 나와, 정확도만으로는 모델을 고를 수 없다"
+   }
+  },
+  {
+   "id": "lab:topic/training-development",
+   "type": "Topic",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-augmentation",
+   "type": "Topic",
+   "label": {
+    "ko": "데이터 증강",
+    "en": "Data augmentation"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 3,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-splitting",
+   "type": "Topic",
+   "label": {
+    "ko": "훈련·검증·시험 분리",
+    "en": "Train/validation/test split"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/weights-and-biases",
+   "type": "Topic",
+   "label": {
+    "ko": "가중치와 편향",
+    "en": "Weights and biases"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/knn",
+   "type": "Topic",
+   "label": {
+    "ko": "k-최근접 이웃",
+    "en": "k-nearest neighbors"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/central-tendency",
+   "type": "Topic",
+   "label": {
+    "ko": "대표값",
+    "en": "Measures of central tendency"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "stats"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/svm",
+   "type": "Topic",
+   "label": {
+    "ko": "서포트 벡터 머신",
+    "en": "Support vector machine"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/accuracy-metrics",
+   "type": "Topic",
+   "label": {
+    "ko": "정확도·손실 지표",
+    "en": "Accuracy and loss metrics"
+   },
+   "page": "2_data_cleaning",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:concept/training-development",
+   "p": "lab:broader",
+   "o": "lab:topic/training-development",
+   "anchor": "#author-sec",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/data-augmentation",
+   "p": "lab:broader",
+   "o": "lab:topic/data-augmentation",
+   "anchor": "#checklist",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/train-test-split",
+   "p": "lab:broader",
+   "o": "lab:topic/data-splitting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/weight",
+   "p": "lab:broader",
+   "o": "lab:topic/weights-and-biases",
+   "anchor": "#practice",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/knn",
+   "p": "lab:broader",
+   "o": "lab:topic/knn",
+   "anchor": "#dur-cap",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/mean",
+   "p": "lab:broader",
+   "o": "lab:topic/central-tendency",
+   "anchor": "#practice",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/svm",
+   "p": "lab:broader",
+   "o": "lab:topic/svm",
+   "anchor": "#dur-cap",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/accuracy-paradox",
+   "p": "lab:broader",
+   "o": "lab:topic/accuracy-metrics",
+   "anchor": "#outro",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/quartile",
+   "p": "lab:partOf",
+   "o": "lab:concept/missing-and-outliers",
+   "anchor": "#glossary",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/iqr",
+   "p": "lab:partOf",
+   "o": "lab:concept/missing-and-outliers",
+   "anchor": "#m2",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:method/knn",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:method/svm",
+   "anchor": "#dur-cap",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/random-state",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#prompt",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

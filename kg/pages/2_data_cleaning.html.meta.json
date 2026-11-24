@@ -1,0 +1,33 @@
+{
+ "title": "2편 · 지우지 말고 고친다: 결측값과 이상치 | 인슈어테크 #1",
+ "number": "02",
+ "series": "AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델",
+ "date": "2026-11-24",
+ "version": "1.1",
+ "creator": [
+  {
+   "name": "안상선",
+   "role": "author"
+  }
+ ],
+ "contributor": [
+  {
+   "name": "AI 보조 제작",
+   "role": "assistant"
+  }
+ ],
+ "about": [
+  "lab:concept/iqr",
+  "lab:concept/missing-and-outliers",
+  "lab:concept/training-development",
+  "lab:concept/prompt",
+  "lab:concept/data-augmentation"
+ ],
+ "basedOn": [],
+ "educationalLevel": "입문~중급",
+ "license": "",
+ "url": "https://adminmrobo.github.io/insurtech__case_classification_model_01/2_data_cleaning.html",
+ "registry": "KG_00_registry 0.3",
+ "seeAlso": "",
+ "suggestedCitation": "안상선 (2026). 2편 · 지우지 말고 고친다: 결측값과 이상치 | 인슈어테크 #1. AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델, v1.1."
+}

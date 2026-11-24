@@ -1,0 +1,695 @@
+{
+ "version": "1.0",
+ "page": "1_claim_question",
+ "nodes": [
+  {
+   "id": "lab:metric/accuracy",
+   "type": "Metric",
+   "label": {
+    "ko": "정확도",
+    "en": "Accuracy"
+   },
+   "page": "1_claim_question",
+   "anchor": "#metrics",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "맞힌 비율. 불균형 데이터에서 속기 쉽다."
+   }
+  },
+  {
+   "id": "lab:metric/recall",
+   "type": "Metric",
+   "label": {
+    "ko": "재현율",
+    "en": "Recall"
+   },
+   "page": "1_claim_question",
+   "anchor": "#metrics",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "실제 불량 중 잡은 비율."
+   }
+  },
+  {
+   "id": "lab:metric/precision",
+   "type": "Metric",
+   "label": {
+    "ko": "정밀도",
+    "en": "Precision"
+   },
+   "page": "1_claim_question",
+   "anchor": "#metrics",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "불량이라 한 것 중 진짜 불량의 비율."
+   }
+  },
+  {
+   "id": "lab:concept/compensation",
+   "type": "Concept",
+   "label": {
+    "ko": "보상",
+    "en": "Compensation"
+   },
+   "page": "1_claim_question",
+   "anchor": "#data",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/accuracy-paradox",
+   "type": "Concept",
+   "label": {
+    "ko": "정확도의 함정",
+    "en": "Accuracy paradox"
+   },
+   "page": "1_claim_question",
+   "anchor": "#outro",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "ai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "양성이 드물면 모두 음성이라고 해도 정확도가 높게 나와, 정확도만으로는 모델을 고를 수 없다"
+   }
+  },
+  {
+   "id": "lab:concept/confusion-matrix",
+   "type": "Concept",
+   "label": {
+    "ko": "혼동 행렬",
+    "en": "Confusion matrix"
+   },
+   "page": "1_claim_question",
+   "anchor": "#baseline",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "정답 클래스와 모델이 고른 클래스를 표로 세어 어떤 실수를 했는지 보여 준다."
+   }
+  },
+  {
+   "id": "lab:concept/training-development",
+   "type": "Concept",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "1_claim_question",
+   "anchor": "#author-sec",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "1_claim_question",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:metric/auc",
+   "type": "Metric",
+   "label": {
+    "ko": "AUC",
+    "en": "Area under the ROC curve"
+   },
+   "page": "1_claim_question",
+   "anchor": "#practice",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "ROC 곡선 아래 넓이, 0.5 무작위·1 완벽"
+   }
+  },
+  {
+   "id": "lab:concept/stratified-sampling",
+   "type": "Concept",
+   "label": {
+    "ko": "층화 추출",
+    "en": "stratified sampling"
+   },
+   "page": "1_claim_question",
+   "anchor": "#data",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ml",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "집단 비율을 지키며 표본을 뽑는 방법. 적은 어종이 시험에서 빠지지 않게 한다."
+   }
+  },
+  {
+   "id": "lab:concept/class-imbalance",
+   "type": "Concept",
+   "label": {
+    "ko": "불균형 데이터",
+    "en": "Class imbalance"
+   },
+   "page": "1_claim_question",
+   "anchor": "#metrics",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "정답 한쪽이 매우 적은 데이터 (의심 7.6%)"
+   }
+  },
+  {
+   "id": "lab:concept/threshold",
+   "type": "Concept",
+   "label": {
+    "ko": "임계값",
+    "en": "decision threshold"
+   },
+   "page": "1_claim_question",
+   "anchor": "#practice",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "확률이 이 값을 넘으면 양성으로 부르는 기준."
+   }
+  },
+  {
+   "id": "lab:concept/train-test-split",
+   "type": "Method",
+   "label": {
+    "ko": "학습/시험 나누기",
+    "en": "Train-test split"
+   },
+   "page": "1_claim_question",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "20%를 시험지로 봉인하고 80%로만 학습"
+   }
+  },
+  {
+   "id": "lab:concept/roc-auc",
+   "type": "Concept",
+   "label": {
+    "ko": "ROC·AUC",
+    "en": "ROC and AUC"
+   },
+   "page": "1_claim_question",
+   "anchor": "#practice",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/random-state",
+   "type": "Concept",
+   "label": {
+    "ko": "random_state (시작 번호)",
+    "en": "random seed (random_state)"
+   },
+   "page": "1_claim_question",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "무작위 섞기의 시작 번호. 같은 번호면 같은 결과가 다시 나온다. 재현성 도구이지 튜닝 대상이 아니다."
+   }
+  },
+  {
+   "id": "lab:method/s10-01",
+   "type": "Method",
+   "label": {
+    "ko": "SPLIT",
+    "en": "SPLIT"
+   },
+   "page": "1_claim_question",
+   "anchor": "#data",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml",
+    "data"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "구분기호로 문자열을 여러 셀에 나눠요."
+   }
+  },
+  {
+   "id": "lab:topic/accuracy-metrics",
+   "type": "Topic",
+   "label": {
+    "ko": "정확도·손실 지표",
+    "en": "Accuracy and loss metrics"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/precision-recall",
+   "type": "Topic",
+   "label": {
+    "ko": "정밀도·재현율",
+    "en": "Precision and recall"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/compensation",
+   "type": "Topic",
+   "label": {
+    "ko": "보상",
+    "en": "Compensation"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/confusion-matrix",
+   "type": "Topic",
+   "label": {
+    "ko": "혼동 행렬",
+    "en": "Confusion matrix"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/training-development",
+   "type": "Topic",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/roc-auc",
+   "type": "Topic",
+   "label": {
+    "ko": "ROC·AUC",
+    "en": "ROC and AUC"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-splitting",
+   "type": "Topic",
+   "label": {
+    "ko": "훈련·검증·시험 분리",
+    "en": "Train/validation/test split"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-cleaning",
+   "type": "Topic",
+   "label": {
+    "ko": "데이터 정제·결측치",
+    "en": "Data cleaning and missing values"
+   },
+   "page": "1_claim_question",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "data"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:metric/accuracy",
+   "p": "lab:broader",
+   "o": "lab:topic/accuracy-metrics",
+   "anchor": "#metrics",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#metrics",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#metrics",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/compensation",
+   "p": "lab:broader",
+   "o": "lab:topic/compensation",
+   "anchor": "#data",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/accuracy-paradox",
+   "p": "lab:broader",
+   "o": "lab:topic/accuracy-metrics",
+   "anchor": "#outro",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/confusion-matrix",
+   "p": "lab:broader",
+   "o": "lab:topic/confusion-matrix",
+   "anchor": "#baseline",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/training-development",
+   "p": "lab:broader",
+   "o": "lab:topic/training-development",
+   "anchor": "#author-sec",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/auc",
+   "p": "lab:broader",
+   "o": "lab:topic/roc-auc",
+   "anchor": "#practice",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/train-test-split",
+   "p": "lab:broader",
+   "o": "lab:topic/data-splitting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/roc-auc",
+   "p": "lab:broader",
+   "o": "lab:topic/roc-auc",
+   "anchor": "#practice",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/s10-01",
+   "p": "lab:broader",
+   "o": "lab:topic/data-cleaning",
+   "anchor": "#data",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/precision",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/accuracy",
+   "p": "lab:hasLimitation",
+   "o": "lab:concept/class-imbalance",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/accuracy",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/threshold",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#practice",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/stratified-sampling",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#data",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/random-state",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#prompt",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/recall",
+   "anchor": "#metrics",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

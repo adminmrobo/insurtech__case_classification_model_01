@@ -1,0 +1,534 @@
+{
+ "version": "1.0",
+ "page": "3_five_models",
+ "nodes": [
+  {
+   "id": "lab:method/knn",
+   "type": "Method",
+   "label": {
+    "ko": "KNN",
+    "en": "k-nearest neighbors"
+   },
+   "page": "3_five_models",
+   "anchor": "#race-grid",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "새 데이터와 가장 가까운 K개 이웃의 다수결(또는 평균)로 예측하는 알고리즘."
+   }
+  },
+  {
+   "id": "lab:method/svm",
+   "type": "Method",
+   "label": {
+    "ko": "SVM",
+    "en": "support vector machine"
+   },
+   "page": "3_five_models",
+   "anchor": "#met-svc",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "두 클래스 사이 여백(마진)이 가장 넓은 경계를 찾는 분류 알고리즘."
+   }
+  },
+  {
+   "id": "lab:metric/recall",
+   "type": "Metric",
+   "label": {
+    "ko": "재현율",
+    "en": "Recall"
+   },
+   "page": "3_five_models",
+   "anchor": "#robo-3",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "실제 불량 중 잡은 비율."
+   }
+  },
+  {
+   "id": "lab:concept/decision-tree",
+   "type": "Method",
+   "label": {
+    "ko": "의사결정나무",
+    "en": "Decision tree"
+   },
+   "page": "3_five_models",
+   "anchor": "#met-lr",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "예/아니오 질문을 이어 나누기"
+   }
+  },
+  {
+   "id": "lab:concept/training-development",
+   "type": "Concept",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "3_five_models",
+   "anchor": "#limits",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/roc-auc",
+   "type": "Concept",
+   "label": {
+    "ko": "ROC·AUC",
+    "en": "ROC and AUC"
+   },
+   "page": "3_five_models",
+   "anchor": "#features",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "3_five_models",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:concept/overfitting",
+   "type": "Concept",
+   "label": {
+    "ko": "과적합",
+    "en": "Overfitting"
+   },
+   "page": "3_five_models",
+   "anchor": "#traits",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "data"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "학습 데이터의 잡음까지 외운 상태."
+   }
+  },
+  {
+   "id": "lab:concept/train-test-split",
+   "type": "Method",
+   "label": {
+    "ko": "학습/시험 나누기",
+    "en": "Train-test split"
+   },
+   "page": "3_five_models",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "20%를 시험지로 봉인하고 80%로만 학습"
+   }
+  },
+  {
+   "id": "lab:metric/precision",
+   "type": "Metric",
+   "label": {
+    "ko": "정밀도",
+    "en": "Precision"
+   },
+   "page": "3_five_models",
+   "anchor": "#robo-3",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "불량이라 한 것 중 진짜 불량의 비율."
+   }
+  },
+  {
+   "id": "lab:concept/random-state",
+   "type": "Concept",
+   "label": {
+    "ko": "random_state (시작 번호)",
+    "en": "random seed (random_state)"
+   },
+   "page": "3_five_models",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "무작위 섞기의 시작 번호. 같은 번호면 같은 결과가 다시 나온다. 재현성 도구이지 튜닝 대상이 아니다."
+   }
+  },
+  {
+   "id": "lab:topic/knn",
+   "type": "Topic",
+   "label": {
+    "ko": "k-최근접 이웃",
+    "en": "k-nearest neighbors"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/svm",
+   "type": "Topic",
+   "label": {
+    "ko": "서포트 벡터 머신",
+    "en": "Support vector machine"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/precision-recall",
+   "type": "Topic",
+   "label": {
+    "ko": "정밀도·재현율",
+    "en": "Precision and recall"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/decision-tree",
+   "type": "Topic",
+   "label": {
+    "ko": "결정 트리",
+    "en": "Decision tree"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/training-development",
+   "type": "Topic",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/roc-auc",
+   "type": "Topic",
+   "label": {
+    "ko": "ROC·AUC",
+    "en": "ROC and AUC"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/bias-variance",
+   "type": "Topic",
+   "label": {
+    "ko": "편향-분산 균형",
+    "en": "Bias–variance trade-off"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-splitting",
+   "type": "Topic",
+   "label": {
+    "ko": "훈련·검증·시험 분리",
+    "en": "Train/validation/test split"
+   },
+   "page": "3_five_models",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:method/knn",
+   "p": "lab:broader",
+   "o": "lab:topic/knn",
+   "anchor": "#race-grid",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/svm",
+   "p": "lab:broader",
+   "o": "lab:topic/svm",
+   "anchor": "#met-svc",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#robo-3",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/decision-tree",
+   "p": "lab:broader",
+   "o": "lab:topic/decision-tree",
+   "anchor": "#met-lr",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/training-development",
+   "p": "lab:broader",
+   "o": "lab:topic/training-development",
+   "anchor": "#limits",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/roc-auc",
+   "p": "lab:broader",
+   "o": "lab:topic/roc-auc",
+   "anchor": "#features",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/overfitting",
+   "p": "lab:broader",
+   "o": "lab:topic/bias-variance",
+   "anchor": "#traits",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/train-test-split",
+   "p": "lab:broader",
+   "o": "lab:topic/data-splitting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#robo-3",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/precision",
+   "anchor": "#robo-3",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:method/knn",
+   "p": "lab:prerequisiteOf",
+   "o": "lab:method/svm",
+   "anchor": "#race-grid",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/random-state",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#prompt",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/recall",
+   "anchor": "#robo-3",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/overfitting",
+   "p": "lab:addressedBy",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#traits",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

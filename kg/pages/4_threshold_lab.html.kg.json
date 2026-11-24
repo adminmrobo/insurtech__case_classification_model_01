@@ -1,0 +1,517 @@
+{
+ "version": "1.0",
+ "page": "4_threshold_lab",
+ "nodes": [
+  {
+   "id": "lab:concept/threshold",
+   "type": "Concept",
+   "label": {
+    "ko": "임계값",
+    "en": "decision threshold"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#formal",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "확률이 이 값을 넘으면 양성으로 부르는 기준."
+   }
+  },
+  {
+   "id": "lab:metric/recall",
+   "type": "Metric",
+   "label": {
+    "ko": "재현율",
+    "en": "Recall"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#robo-4",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "실제 불량 중 잡은 비율."
+   }
+  },
+  {
+   "id": "lab:metric/precision",
+   "type": "Metric",
+   "label": {
+    "ko": "정밀도",
+    "en": "Precision"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#robo-4",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "불량이라 한 것 중 진짜 불량의 비율."
+   }
+  },
+  {
+   "id": "lab:concept/training-development",
+   "type": "Concept",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#help",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:concept/cross-validation",
+   "type": "Method",
+   "label": {
+    "ko": "교차검증",
+    "en": "Cross-validation"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#formal",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ml",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "다섯 조각으로 다섯 번 재기"
+   }
+  },
+  {
+   "id": "lab:concept/confusion-matrix",
+   "type": "Concept",
+   "label": {
+    "ko": "혼동 행렬",
+    "en": "Confusion matrix"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#judge",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "정답 클래스와 모델이 고른 클래스를 표로 세어 어떤 실수를 했는지 보여 준다."
+   }
+  },
+  {
+   "id": "lab:concept/train-test-split",
+   "type": "Method",
+   "label": {
+    "ko": "학습/시험 나누기",
+    "en": "Train-test split"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "20%를 시험지로 봉인하고 80%로만 학습"
+   }
+  },
+  {
+   "id": "lab:concept/random-state",
+   "type": "Concept",
+   "label": {
+    "ko": "random_state (시작 번호)",
+    "en": "random seed (random_state)"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "무작위 섞기의 시작 번호. 같은 번호면 같은 결과가 다시 나온다. 재현성 도구이지 튜닝 대상이 아니다."
+   }
+  },
+  {
+   "id": "lab:method/svm",
+   "type": "Method",
+   "label": {
+    "ko": "SVM",
+    "en": "support vector machine"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#make",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "두 클래스 사이 여백(마진)이 가장 넓은 경계를 찾는 분류 알고리즘."
+   }
+  },
+  {
+   "id": "lab:concept/compensation",
+   "type": "Concept",
+   "label": {
+    "ko": "보상",
+    "en": "Compensation"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#formal",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:topic/precision-recall",
+   "type": "Topic",
+   "label": {
+    "ko": "정밀도·재현율",
+    "en": "Precision and recall"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/training-development",
+   "type": "Topic",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/cross-validation",
+   "type": "Topic",
+   "label": {
+    "ko": "교차검증",
+    "en": "Cross-validation"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 3,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "stats"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/confusion-matrix",
+   "type": "Topic",
+   "label": {
+    "ko": "혼동 행렬",
+    "en": "Confusion matrix"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-splitting",
+   "type": "Topic",
+   "label": {
+    "ko": "훈련·검증·시험 분리",
+    "en": "Train/validation/test split"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/svm",
+   "type": "Topic",
+   "label": {
+    "ko": "서포트 벡터 머신",
+    "en": "Support vector machine"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/compensation",
+   "type": "Topic",
+   "label": {
+    "ko": "보상",
+    "en": "Compensation"
+   },
+   "page": "4_threshold_lab",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#robo-4",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#robo-4",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/training-development",
+   "p": "lab:broader",
+   "o": "lab:topic/training-development",
+   "anchor": "#help",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/cross-validation",
+   "p": "lab:broader",
+   "o": "lab:topic/cross-validation",
+   "anchor": "#formal",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/confusion-matrix",
+   "p": "lab:broader",
+   "o": "lab:topic/confusion-matrix",
+   "anchor": "#judge",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/train-test-split",
+   "p": "lab:broader",
+   "o": "lab:topic/data-splitting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:method/svm",
+   "p": "lab:broader",
+   "o": "lab:topic/svm",
+   "anchor": "#make",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/compensation",
+   "p": "lab:broader",
+   "o": "lab:topic/compensation",
+   "anchor": "#formal",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/precision",
+   "anchor": "#robo-4",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#robo-4",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#robo-4",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/threshold",
+   "p": "lab:partOf",
+   "o": "lab:concept/confusion-matrix",
+   "anchor": "#formal",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/random-state",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#prompt",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/recall",
+   "anchor": "#robo-4",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

@@ -1,0 +1,473 @@
+{
+ "version": "1.0",
+ "page": "5_surrogate_tree",
+ "nodes": [
+  {
+   "id": "lab:method/standardization",
+   "type": "Method",
+   "label": {
+    "ko": "표준화",
+    "en": "standardization"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#method",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "특징마다 평균을 빼고 표준편차로 나눠 같은 눈금으로 맞추는 일."
+   }
+  },
+  {
+   "id": "lab:metric/recall",
+   "type": "Metric",
+   "label": {
+    "ko": "재현율",
+    "en": "Recall"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#method",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "실제 불량 중 잡은 비율."
+   }
+  },
+  {
+   "id": "lab:metric/accuracy",
+   "type": "Metric",
+   "label": {
+    "ko": "정확도",
+    "en": "Accuracy"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#method",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "biz",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "맞힌 비율. 불균형 데이터에서 속기 쉽다."
+   }
+  },
+  {
+   "id": "lab:concept/training-development",
+   "type": "Concept",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#author-sec",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "biz"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24"
+  },
+  {
+   "id": "lab:concept/prompt",
+   "type": "Concept",
+   "label": {
+    "ko": "프롬프트",
+    "en": "prompt"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "ml",
+    "ai",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "AI에게 무엇을 만들지 알려 주는 글."
+   }
+  },
+  {
+   "id": "lab:concept/decision-tree",
+   "type": "Method",
+   "label": {
+    "ko": "의사결정나무",
+    "en": "Decision tree"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#problem",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "예/아니오 질문을 이어 나누기"
+   }
+  },
+  {
+   "id": "lab:concept/train-test-split",
+   "type": "Method",
+   "label": {
+    "ko": "학습/시험 나누기",
+    "en": "Train-test split"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "stats",
+    "ai",
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "20%를 시험지로 봉인하고 80%로만 학습"
+   }
+  },
+  {
+   "id": "lab:metric/precision",
+   "type": "Metric",
+   "label": {
+    "ko": "정밀도",
+    "en": "Precision"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#compare",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "explained",
+   "domain": [
+    "data",
+    "stats",
+    "fin"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "불량이라 한 것 중 진짜 불량의 비율."
+   }
+  },
+  {
+   "id": "lab:concept/random-state",
+   "type": "Concept",
+   "label": {
+    "ko": "random_state (시작 번호)",
+    "en": "random seed (random_state)"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#prompt",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "ml"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "무작위 섞기의 시작 번호. 같은 번호면 같은 결과가 다시 나온다. 재현성 도구이지 튜닝 대상이 아니다."
+   }
+  },
+  {
+   "id": "lab:concept/cross-validation",
+   "type": "Method",
+   "label": {
+    "ko": "교차검증",
+    "en": "Cross-validation"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#leaf-cap",
+   "level": 2,
+   "status": "known",
+   "confidence": "medium",
+   "coverage": "mentioned",
+   "domain": [
+    "stats",
+    "ml",
+    "llm"
+   ],
+   "match": [],
+   "auto": "autokg-2026-11-24",
+   "definition": {
+    "ko": "다섯 조각으로 다섯 번 재기"
+   }
+  },
+  {
+   "id": "lab:topic/feature-engineering",
+   "type": "Topic",
+   "label": {
+    "ko": "특징 공학",
+    "en": "Feature engineering"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/precision-recall",
+   "type": "Topic",
+   "label": {
+    "ko": "정밀도·재현율",
+    "en": "Precision and recall"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/accuracy-metrics",
+   "type": "Topic",
+   "label": {
+    "ko": "정확도·손실 지표",
+    "en": "Accuracy and loss metrics"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/training-development",
+   "type": "Topic",
+   "label": {
+    "ko": "교육",
+    "en": "Training and development"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "biz"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/prompting",
+   "type": "Topic",
+   "label": {
+    "ko": "프롬프팅",
+    "en": "Prompting"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 4,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/decision-tree",
+   "type": "Topic",
+   "label": {
+    "ko": "결정 트리",
+    "en": "Decision tree"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 2,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/data-splitting",
+   "type": "Topic",
+   "label": {
+    "ko": "훈련·검증·시험 분리",
+    "en": "Train/validation/test split"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 1,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "ai"
+   ],
+   "match": []
+  },
+  {
+   "id": "lab:topic/cross-validation",
+   "type": "Topic",
+   "label": {
+    "ko": "교차검증",
+    "en": "Cross-validation"
+   },
+   "page": "5_surrogate_tree",
+   "anchor": "#kg",
+   "level": 3,
+   "status": "known",
+   "confidence": "high",
+   "coverage": "mentioned",
+   "domain": [
+    "stats"
+   ],
+   "match": []
+  }
+ ],
+ "edges": [
+  {
+   "s": "lab:method/standardization",
+   "p": "lab:broader",
+   "o": "lab:topic/feature-engineering",
+   "anchor": "#method",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#method",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/accuracy",
+   "p": "lab:broader",
+   "o": "lab:topic/accuracy-metrics",
+   "anchor": "#method",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/training-development",
+   "p": "lab:broader",
+   "o": "lab:topic/training-development",
+   "anchor": "#author-sec",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/prompt",
+   "p": "lab:broader",
+   "o": "lab:topic/prompting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/decision-tree",
+   "p": "lab:broader",
+   "o": "lab:topic/decision-tree",
+   "anchor": "#problem",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/train-test-split",
+   "p": "lab:broader",
+   "o": "lab:topic/data-splitting",
+   "anchor": "#prompt",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:broader",
+   "o": "lab:topic/precision-recall",
+   "anchor": "#compare",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:concept/cross-validation",
+   "p": "lab:broader",
+   "o": "lab:topic/cross-validation",
+   "anchor": "#leaf-cap",
+   "confidence": "medium"
+  },
+  {
+   "s": "lab:metric/recall",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/precision",
+   "anchor": "#method",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:concept/random-state",
+   "p": "lab:partOf",
+   "o": "lab:concept/train-test-split",
+   "anchor": "#prompt",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  },
+  {
+   "s": "lab:metric/precision",
+   "p": "lab:contrastsWith",
+   "o": "lab:metric/recall",
+   "anchor": "#compare",
+   "confidence": "medium",
+   "note": "다른 해설 페이지에서 확인된 관계"
+  }
+ ]
+}

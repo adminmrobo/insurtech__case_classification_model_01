@@ -1,0 +1,33 @@
+{
+ "title": "1편 · 청구는 1.5%: 정확도의 함정 | 인슈어테크 #1",
+ "number": "01",
+ "series": "AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델",
+ "date": "2026-11-24",
+ "version": "1.1",
+ "creator": [
+  {
+   "name": "안상선",
+   "role": "author"
+  }
+ ],
+ "contributor": [
+  {
+   "name": "AI 보조 제작",
+   "role": "assistant"
+  }
+ ],
+ "about": [
+  "lab:metric/accuracy",
+  "lab:metric/recall",
+  "lab:metric/precision",
+  "lab:concept/compensation",
+  "lab:concept/accuracy-paradox"
+ ],
+ "basedOn": [],
+ "educationalLevel": "입문~중급",
+ "license": "",
+ "url": "https://adminmrobo.github.io/insurtech__case_classification_model_01/1_claim_question.html",
+ "registry": "KG_00_registry 0.3",
+ "seeAlso": "",
+ "suggestedCitation": "안상선 (2026). 1편 · 청구는 1.5%: 정확도의 함정 | 인슈어테크 #1. AI(인공지능) x 비즈니스 #1 인슈어테크_01_분류모델, v1.1."
+}
